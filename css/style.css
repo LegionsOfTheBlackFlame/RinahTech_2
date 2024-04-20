@@ -558,75 +558,20 @@ ul.email li a {
 /** end about **/
 
 
-/** trannir **/
+/** gallery **/
 
-.trannir {
-     padding-top: 90px;
+.gallery {
+     max-width: 80vw;
+     margin: auto;
 }
 
-.trannir .titlepage {
-     padding-bottom: 60px;
-}
-
-.trannir .titlepage p {
-     color: #000000;
-     font-size: 17px;
-     line-height: 30px;
-     padding-top: 10px;
-}
-
-.posi_in {
-     position: inherit;
-     padding: 0;
-}
-
-.trannir_text i img {
-     border-radius: 50%;
-}
-
-.trannir_text h3 {
-     margin-top: 40px;
-     color: #111111;
-     font-size: 31px;
-     padding: 0;
-     font-weight: bold;
-     line-height: 20px;
-}
-
-.trannir_text span {
-     color: #26cc35;
-     font-size: 23px;
-     font-weight: bold;
-     display: block;
-}
-
-.trannir_text ul.social_icon li a {
-     color: #000000;
-}
-
-#testimo .carousel-indicators {
-     display: none;
-}
-
-#testimo a.carousel-control-next,
-#testimo a.carousel-control-prev {
-     background: #26cc35;
-     width: 80px;
-     height: 80px;
-     top: 49%;
-     opacity: 1;
-     font-size: 40px;
-     border-radius: 40px;
-     color: #fff;
-}
-
-#testimo a.carousel-control-next:focus,
-#testimo a.carousel-control-next:hover,
-#testimo a.carousel-control-prev:focus,
-#testimo a.carousel-control-prev:hover {
-     background: #1f1d47;
-     color: #fff;
-     opacity: 1;
+.item-display {
+     display: grid;
+    
+     grid-template-columns: auto 0.5fr;
+     gap: 5px;
+     margin: auto;
+     border: 2px solid red;
 }
 
 

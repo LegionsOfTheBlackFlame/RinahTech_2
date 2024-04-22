@@ -13,8 +13,8 @@ app.use(express.json());
 
 cloudinary.config({ 
     cloud_name: 'sample', 
-    api_key: '783784735286392', 
-    api_secret: 'a676b67565c6767a6767d6767f676fe1'
+    api_key: '-', 
+    api_secret: '-'
   });
 
 

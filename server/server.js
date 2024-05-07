@@ -2,7 +2,7 @@ import axios from "axios";
 import dotenv from "dotenv";
 import  express  from "express";
 import {v2 as cloudinary} from "cloudinary";
-
+import { google } from "googleapis";
 
 
 const app = express();
@@ -10,6 +10,15 @@ const PORT = process.env.PORT || 3000;
 
 dotenv.config();
 app.use(express.json());
+
+
+
+
+app.get('/oauth2callback', async (req, res) => {
+    const { code } = req.query;
+    const { token } = await oauth2client.getToken(code);
+    oauth2client.setCredentials(token);
+})
 
 cloudinary.config({ 
     cloud_name: 'sample', 

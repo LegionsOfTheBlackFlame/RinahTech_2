@@ -1096,8 +1096,44 @@ ul.social_icon li a:hover {
      outline: 2px solid #f1f1f1;
 }
 .gallery-layout {
+     width: clamp(1000px, 80vw, 2000px);
+     margin: auto;
      outline: 2px solid red;
 }
 .gallery-header {
+     display: flex;
+     justify-content: space-between;
+     padding: 1vw;
      outline: 2px solid white;
+}
+.gallery-filter-options {
+     --border-gradient: linear-gradient(to right, #ffffff00, #ffffff, #ffffff00);
+     padding: 5px;
+     margin: 10px 0 ;
+     border-top-width: 2px;
+     border-top-style: solid;
+
+     /* outline: 2px solid red; */
+}
+.gallery-filter-options > div {
+     width: fit-content;
+     margin: auto;
+     /* display: flex; */
+     /* outline: 2px solid white; */
+}
+.gallery-container {
+     display: grid;
+     grid-auto-flow: column;
+     grid-template-rows: 1fr 1fr 1fr;
+     padding: 2vw;
+     justify-items: center;
+     
+}
+.gallery-item {
+     width: clamp(200px, 20%, 500px);
+     padding: 1vw;
+}
+
+.hidden {
+     display: none;
 }

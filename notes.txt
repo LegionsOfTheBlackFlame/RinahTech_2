@@ -1,9 +1,25 @@
 todo:
+ done - import google reviews to the database
+        develop the reviews section
+        list services we're using
+        find a way to catch new reviews
+        implement media viewing mechanism
+        add the hidden pages for each service, team memeber, about section
+        add whatsapp button
+        fix gallery design
+        compress images in upload
 
->> remove profile icon from navbar
->>change logo
->>find logo
->>vectorize logo
+
+
+--- TOOLS ---
+LOBSTR.IO : Fetching google reviews
+EXPRESS.JS: server
+NODE.JS: runtime env
+TELEGRAF.JS: telegram bot library
+MYSQL2: database connection & management 
+
+--- DEV-TOOLS ---
+NODEMON: auto refreshing server upon updates
 
 
 
@@ -21,6 +37,6 @@ the About page needs to list certificates and work history
 Fotter needs to include the logo, PADI seal
 
 Gallery process:
->> pass a youtube playlist to "list videos"
->> for each video on the playlist extract the url/ description and title
->> for each video item create item card and pass the extracted info
+Images and videos must be displayed together at first. Gallery control buttons both checked initially, hide
+the corresponding file types when unchecked. All images and videos are sorted by data from newest to oldest
+

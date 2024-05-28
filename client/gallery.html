@@ -26,22 +26,24 @@
    </head>
    <!-- body -->
    <body class="main-layout">
+    <!-- header -->
     <header>
         <!-- header inner -->
        <div class="header">
         <div class="header-layout">
            <div class="header-logo">
-              <img src="/RinahTech_2/client/images/diving-logo.png"/>
+              <img src="/images/diving-logo.png"/>
            </div>
            <div class="nav-Menu">
               <ul class="menu">
                  <li><a href="services.html">Services</a></li>
-                 <li><a href="gallery.html" active >Gallery</a></li>
+                 <li><a href="gallery.html">Gallery</a></li>
               </ul>
            </div>
         </div>
        </div>
      </header>
+     <!-- end header -->
     <div class="gallery">
         <div class="gallery-layout">
             <div class="gallery-header">
@@ -49,70 +51,37 @@
                     <h2>Gallery</h2>
                 </div>
                 <div class="gallery-controls">
-                    <button id="btnFilter" class="gallery-filter">filters</button>
-                    <div id="contFilterOptions" class="gallery-filter-options hidden">
-                        <div>
-                        <input id="chkFilterOptionPhotos" type="checkbox" checked/> <label id="lblFilterOptionPhotos" for="chkFilterOptionPhotos">Photos</label>
-                    </div>
-                       <div>
-                        <input id="chkFilterOptionVideos" type="checkbox" checked/> <label id="lblFilterOptionVideos" for="chkFilterOptionVideos">Videos</label>
-                    </div>
+                    <button id="btnFilters" class="gallery-filter">filters</button>
+                    <div id="contFilterOptions" class="hidden gallery-filter-options">
+                        <input type="radio" id="radioOptionAll" name="radioFilterOptions" value="" checked>
+                        <label for="radioOptionAll">All Media</label>
+
+                        <input type="radio" id="radioOptionImages" name="radioFilterOptions" value="image" >
+                        <label for="radioOptionImages">Images</label>
+                        
+                        <input type="radio" id="radioOptionVideos" name="radioFilterOptions" value="video">
+                        <label for="radioOptionVideos">Videos</label>
+                        
                     </div>
                 </div>
             </div>
 
-            <div class="gallery-container">
-                <div class="gallery-item">
-                    <img class="image" src="/RinahTech_2/client/images/placeholder.png"/>
-                </div>
+            <div class="gallery-container" id="gallery_container">
+                
+            </div>
 
-                <div class="gallery-item">
-                    <img class="image" src="/RinahTech_2/client/images/placeholder.png"/>
+            <div class="page-indicators">
+                <p id="btnIndicatorPrev" class="indicator-control">prev</p>
+                <div>
+                    <input type="radio" name="indicator" value="1" checked>
+                    <input type="radio" name="indicator" value="2">
+                    <input type="radio" name="indicator" value="3">
                 </div>
-
-                <div class="gallery-item">
-                    <img class="image" src="/RinahTech_2/client/images/placeholder.png"/>
-                </div>
-
-                <div class="gallery-item">
-                    <img class="image" src="/RinahTech_2/client/images/placeholder.png"/>
-                </div>
-
-                <div class="gallery-item">
-                    <img class="image" src="/RinahTech_2/client/images/placeholder.png"/>
-                </div>
-
-                <div class="gallery-item">
-                    <img class="image" src="/RinahTech_2/client/images/placeholder.png"/>
-                </div>
-
-                <div class="gallery-item">
-                    <img class="image" src="/RinahTech_2/client/images/placeholder.png"/>
-                </div>
-
-                <div class="gallery-item">
-                    <img class="image" src="/RinahTech_2/client/images/placeholder.png"/>
-                </div>
-
-                <div class="gallery-item">
-                    <img class="image" src="/RinahTech_2/client/images/placeholder.png"/>
-                </div>
-
-                <div class="gallery-item">
-                    <img class="image" src="/RinahTech_2/client/images/placeholder.png"/>
-                </div>
-
-                <div class="gallery-item">
-                    <img class="image" src="/RinahTech_2/client/images/placeholder.png"/>
-                </div>
-
-                <div class="gallery-item">
-                    <img class="image" src="/RinahTech_2/client/images/placeholder.png"/>
-                </div>
+                <p id="btnIndicatorNext" class="indicator-control">next</p>
             </div>
         </div>
     
      </div>
-     <script src="/RinahTech_2/client/js/gallery.js"></script>
+     <script src="js/gallery.js"></script>
    </body>
 </html>

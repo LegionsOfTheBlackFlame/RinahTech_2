@@ -28,7 +28,7 @@ body {
      line-height: 1.80857;
      font-weight: normal;
     background-color: #1f1d47;
-     overflow-x: hidden;
+     /* overflow-x: hidden; */
 }
 
 a {
@@ -190,6 +190,15 @@ button {
      border: none;
 }
 
+@keyframes content-loading {
+     0% {
+          background-color: #ddd;
+     }
+     100% {
+          background-color: slategray;
+     }
+}
+
 .full {
      width: 100%;
      float: left;
@@ -298,6 +307,16 @@ header {
      cursor: pointer;
 }
 
+.whatsapp {
+     position: fixed;
+     position: -webkit-sticky;
+     border-radius: 5rem;
+     padding: 2em;
+     bottom: 1rem;
+     right: 1rem;
+     background-color: #26cc35;
+
+}
 
 /*--------------------------------------------------------------------- 
 menu section
@@ -508,7 +527,7 @@ color: #daff9e;
 .img-frame1 {
      width: 500px;
      height: 500px;
-     background-image: url(/client/images/mustafa.png);
+     background-image: url(../images/mustafa.png);
      background-size: contain;
      background-repeat: no-repeat;
      z-index: 2;
@@ -659,11 +678,26 @@ color: #daff9e;
 }
 
 .review-card {
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;
      width: 100%;
-     height: 200px;
+     height: 250px;
      padding: 5% 10%;
      border-radius: 3rem;
      background-color: white;
+}
+
+.skeleton-text-ph {
+     height: 1em;
+     width: 100%;
+     margin: .5em auto;
+     border-radius: .5em;
+     animation: content-loading 1s linear infinite alternate;
+}
+
+.skeleton-text-ph:last-child {
+     width: 80%;
 }
 
 .review-list {
@@ -674,7 +708,7 @@ color: #daff9e;
 
 .review-list > div {
      display: flex;
-     /* outline: 2px solid black; */
+     outline: 2px solid black;
 }
 
 .left-cirs {
@@ -873,7 +907,12 @@ color: #daff9e;
 }
 
 /** gallery **/
+.gallery-container {
 
+}
+.imageItemContainer, .videoItemContainer {
+   
+}
 
 
 /** end trannir **/
@@ -1096,44 +1135,91 @@ ul.social_icon li a:hover {
      outline: 2px solid #f1f1f1;
 }
 .gallery-layout {
-     width: clamp(1000px, 80vw, 2000px);
+     width: clamp(1200px, 80vw, 2000px);
      margin: auto;
      outline: 2px solid red;
 }
 .gallery-header {
      display: flex;
      justify-content: space-between;
-     padding: 1vw;
+     padding: 2%;
      outline: 2px solid white;
-}
-.gallery-filter-options {
-     --border-gradient: linear-gradient(to right, #ffffff00, #ffffff, #ffffff00);
-     padding: 5px;
-     margin: 10px 0 ;
-     border-top-width: 2px;
-     border-top-style: solid;
-
-     /* outline: 2px solid red; */
-}
-.gallery-filter-options > div {
-     width: fit-content;
-     margin: auto;
-     /* display: flex; */
-     /* outline: 2px solid white; */
 }
 .gallery-container {
      display: grid;
      grid-auto-flow: column;
-     grid-template-rows: 1fr 1fr 1fr;
-     padding: 2vw;
-     justify-items: center;
-     
-}
-.gallery-item {
-     width: clamp(200px, 20%, 500px);
-     padding: 1vw;
+     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+     margin: 2vw;
 }
 
+.page-indicators {
+     display: flex;
+     width: fit-content;
+     margin: auto;
+     outline: 2px solid saddlebrown;
+}
+
+.page-indicators > * {
+     margin: 1rem 0.5rem;
+}
+
+.indicator-control:hover {
+color: white;
+cursor: pointer;
+}
 .hidden {
      display: none;
 }
+
+/* styles.css */
+#reviews-container {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+ }
+ 
+ #profiles-container {
+     display: flex;
+     gap: 10px;
+     overflow: hidden;
+     width: fit-content;
+ }
+ 
+ .profile {
+     border-radius: 50%;
+     width: 50px;
+     height: 50px;
+     transition: transform 0.5s ease;
+ }
+ 
+ .active {
+     transform: scale(1.2);
+ }
+ 
+ #active-review {
+     margin-top: 20px;
+     text-align: center;
+     max-width: 600px;
+ }
+ 
+ #rating-stars {
+     margin-top: auto;
+ }
+ 
+ .star {
+     font-size: 24px;
+     color: gold;
+ }
+ 
+ #review-text {
+     display: -webkit-box;
+     -webkit-box-orient: vertical;
+     -webkit-line-clamp: 3; /* Number of lines to display */
+     overflow: hidden;
+     text-overflow: ellipsis;
+     white-space: pre-wrap; /* Allows the text to wrap onto new lines */
+ }
+#reviewer-name {
+     color: #000;
+} 

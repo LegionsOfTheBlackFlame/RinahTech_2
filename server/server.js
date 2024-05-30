@@ -120,7 +120,7 @@ app.get('/fetch_media', async (req, res) => {
 
     const videoCallback = (partialData) => {
        
-       
+       console.log(partialData);
      res.write(JSON.stringify(partialData));
         
     };
@@ -184,7 +184,10 @@ app.listen(PORT, ()=> {
     console.log(`server running on port ${PORT}`);
 })
 
-const storage = new Storage({authClient: oauth2client});
+const storage = new Storage({
+    projectId: 'sealeon-diving',
+    keyFilename: null
+});
 
 async function fetchImagesFromCloudStorage(bucketName, callback) {
     try {

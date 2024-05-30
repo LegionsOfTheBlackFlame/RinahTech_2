@@ -1,130 +1,195 @@
-// Decodes chunks of data sent as Uint8Array
 async function decodeChunks(chunk) {
-    console.log("running decoder...");
     const decoder = new TextDecoder('utf-8');
     const decoded = decoder.decode(chunk);
     const thisArray = JSON.parse(decoded);
     return thisArray;
 }
 
-// Adds new items to the main array and sorts items based on date values descending
 async function sortAndCombine(main, part, callback) {
-    console.log("running sort and combine...");
     const combined = main.concat(part);
     combined.sort((a, b) => new Date(b.date) - new Date(a.date));
-    await callback(combined); // Use await to ensure the callback completes
+    await callback(combined);
 }
 
-async function filterMedia(state) {
-    console.log("Filtering with filter:", state.Filter);
+async function filterMedia(StateVariables) {
+    const state = StateVariables.state;
     if (state.Filter) {
-        return state.Items.filter(item => item.item_type === state.Filter); // Make sure to use the correct key for filtering
+        return state.Items.filter(item => item.item_type === state.Filter);
     }
     return state.Items;
 }
 
-async function paginate(items, state) {
-    const start = (state.PageDisplayed - 1) * state.ItemsPerPage;
-    const end = start + state.ItemsPerPage;
-    return items.slice(start, end);
+async function paginate(items, StateVariables) {
+    const state = StateVariables.state;
+    if (state.SelectedItemIndex !== null) {
+        const start = Math.max(0, state.SelectedItemIndex - 2);
+        const end = Math.min(items.length, state.SelectedItemIndex + 3);
+        return items.slice(start, end);
+    } else {
+        const start = (state.PageDisplayed - 1) * state.ItemsPerPage;
+        const end = start + state.ItemsPerPage;
+        return items.slice(start, end);
+    }
 }
 
-function renderItems(items, elements) {
+function renderItems(items, StateVariables) {
+    const elements = StateVariables;
     elements.gallery.innerHTML = '';
-    items.forEach((item, index) => { // Add index to track which item is clicked
+
+    items.forEach((item, index) => {
         const div = document.createElement('div');
         const img = document.createElement('img');
 
         div.className = item.item_type + "ItemContainer";
         img.src = item.image_source;
-        img.dataset.index = index; // Set dataset with the index of the item
+        img.dataset.index = index;
         div.appendChild(img);
         elements.gallery.appendChild(div);
 
-        // Add click event listener to each image
         img.addEventListener('click', () => {
-            displayClickedItem(item);
+            displayClickedItem(item, index, StateVariables);
         });
     });
 }
 
-async function paginateAndRender(state, elements) {
-    const itemsToDisplay = await filterMedia(state);
-    const paginatedItems = await paginate(itemsToDisplay, state);
-    renderItems(paginatedItems, elements);
+function displayClickedItem(item, index, StateVariables) {
+    const elements = StateVariables;
+    elements.state.SelectedItemIndex = index;
+    elements.itemDisplayContainer.innerHTML = `
+       
+        <div class="display">
+            ${item.item_type === 'video' ? 
+                `<iframe src="https://www.youtube.com/embed/${item.id}" class="video-item" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` :
+                `<img src="${item.image_source}" alt="Selected Media">`}
+                <button id="btnCloseDisplay" class="close-button">X</button>
+            <button id="btnPrevItem" class="nav-button-prev">&lt;</button>
+            <button id="btnNextItem" class="nav-button-next">&gt;</button>
+            </div>
+           
+    `;
+    elements.itemDisplayContainer.classList.remove('hidden');
+    elements.gallery.classList.add('shrunk-gallery');
+    elements.pageIndicators.classList.add('hidden');
+    elements.btnPrev.classList.add('hidden');
+    elements.btnNext.classList.add('hidden');
+
+    document.getElementById('btnCloseDisplay').addEventListener('click', () => {
+        elements.state.SelectedItemIndex = null;
+        elements.itemDisplayContainer.innerHTML = '';
+        elements.itemDisplayContainer.classList.add('hidden');
+        elements.gallery.classList.remove('shrunk-gallery');
+        elements.pageIndicators.classList.remove('hidden');
+        elements.btnPrev.classList.remove('hidden');
+        elements.btnNext.classList.remove('hidden');
+        paginateAndRender(StateVariables);
+    });
+
+    document.getElementById('btnPrevItem').addEventListener('click', () => {
+        const prevIndex = Math.max(0, index - 1);
+        const prevItem = elements.state.Items[prevIndex];
+        displayClickedItem(prevItem, prevIndex, StateVariables);
+    });
+
+    document.getElementById('btnNextItem').addEventListener('click', () => {
+        const nextIndex = Math.min(elements.state.Items.length - 1, index + 1);
+        const nextItem = elements.state.Items[nextIndex];
+        displayClickedItem(nextItem, nextIndex, StateVariables);
+    });
+
+    paginateAndRender(StateVariables);
+}
+
+function createPageIndicators(StateVariables) {
+    const elements = StateVariables;
+    const indicatorContainer = elements.indicatorContainer;
+    indicatorContainer.innerHTML = '';
+
+    const totalPages = Math.ceil(elements.state.Items.length / elements.state.ItemsPerPage);
+    for (let i = 1; i <= totalPages; i++) {
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'indicator';
+        radio.value = i;
+        if (i === elements.state.PageDisplayed) {
+            radio.checked = true;
+        }
+        radio.addEventListener('change', () => {
+            elements.state.PageDisplayed = i;
+            paginateAndRender(StateVariables);
+        });
+        indicatorContainer.appendChild(radio);
+    }
+}
+
+async function paginateAndRender(StateVariables) {
+    const itemsToDisplay = await filterMedia(StateVariables);
+    const paginatedItems = await paginate(itemsToDisplay, StateVariables);
+    renderItems(paginatedItems, StateVariables);
+
+    createPageIndicators(StateVariables);
+
+    const elements = StateVariables;
+    elements.btnPrev.style.display = elements.state.PageDisplayed === 1 ? 'none' : 'block';
+    elements.btnNext.style.display = elements.state.PageDisplayed === Math.ceil(elements.state.Items.length / elements.state.ItemsPerPage) ? 'none' : 'block';
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
-    const domElements = {
+    const StateVariables = {
         gallery: document.getElementById('gallery_container'),
         btnPrev: document.getElementById('btnIndicatorPrev'),
         btnNext: document.getElementById('btnIndicatorNext'),
-        indicators: document.querySelectorAll('input[name="indicator"]'),
+        indicatorContainer: document.getElementById('indicatorContainer'),
         btnFilters: document.getElementById('btnFilters'),
         contFilterOptions: document.getElementById('contFilterOptions'),
-        filterOptionsRadioGroup: document.querySelectorAll('input[name="radioFilterOptions"]')
-    };
-
-    const state = {
-        Items: [],
-        ToBeDisplayed: [],
-        Filter: '', // Ensure Filter is initialized
-        ItemsPerPage: 25,
-        PageDisplayed: 1
+        filterOptionsRadioGroup: document.querySelectorAll('input[name="radioFilterOptions"]'),
+        itemDisplayContainer: document.getElementById('item-display-container'),
+        pageIndicators: document.querySelector('.page-indicators'),
+        state: {
+            Items: [],
+            ToBeDisplayed: [],
+            Filter: '',
+            ItemsPerPage: 25,
+            PageDisplayed: 1,
+            SelectedItemIndex: null
+        }
     };
 
     const callbackSortAndCombine = async (updatedMediaList) => {
-        state.Items = [...updatedMediaList];
-        await paginateAndRender(state, domElements);
+        StateVariables.state.Items = [...updatedMediaList];
+        await paginateAndRender(StateVariables);
     };
 
     const response = await fetch("/fetch_media");
 
     for await (const chunk of response.body) {
         const arrayPart = await decodeChunks(chunk);
-        await sortAndCombine(state.Items, arrayPart, callbackSortAndCombine);
+        await sortAndCombine(StateVariables.state.Items, arrayPart, callbackSortAndCombine);
     }
 
-    // Handles media filtration
-    domElements.filterOptionsRadioGroup.forEach(radio => {
+    StateVariables.filterOptionsRadioGroup.forEach(radio => {
         radio.addEventListener('click', (e) => {
-            state.Filter = e.target.value;
-            console.log("Filter selected:", state.Filter);
-            paginateAndRender(state, domElements);
+            StateVariables.state.Filter = e.target.value;
+            paginateAndRender(StateVariables);
         });
     });
 
-    // Show/Hide filter options 
     let isHidden = true;
-    domElements.btnFilters.addEventListener('click', function () {
-        if (isHidden) {
-            domElements.contFilterOptions.classList.remove('hidden');
-        } else {
-            domElements.contFilterOptions.classList.add('hidden');
-        }
+    StateVariables.btnFilters.addEventListener('click', function () {
+        StateVariables.contFilterOptions.classList.toggle('hidden');
         isHidden = !isHidden;
     });
 
-    // Page buttons and indicator
-    let selectedIndicator = Array.from(domElements.indicators).findIndex(ind => ind.checked);
-
-    domElements.btnNext.addEventListener('click', function () {
-        if (selectedIndicator == domElements.indicators.length - 1) {
-            return;
+    StateVariables.btnNext.addEventListener('click', function () {
+        if (StateVariables.state.PageDisplayed < Math.ceil(StateVariables.state.Items.length / StateVariables.state.ItemsPerPage)) {
+            StateVariables.state.PageDisplayed++;
+            paginateAndRender(StateVariables);
         }
-        selectedIndicator++;
-        domElements.indicators[selectedIndicator].checked = true;
-        state.PageDisplayed++;
-        paginateAndRender(state, domElements);
     });
 
-    domElements.btnPrev.addEventListener('click', function () {
-        if (selectedIndicator == 0) {
-            return;
+    StateVariables.btnPrev.addEventListener('click', function () {
+        if (StateVariables.state.PageDisplayed > 1) {
+            StateVariables.state.PageDisplayed--;
+            paginateAndRender(StateVariables);
         }
-        selectedIndicator--;
-        domElements.indicators[selectedIndicator].checked = true;
-        state.PageDisplayed--;
-        paginateAndRender(state, domElements);
     });
 });

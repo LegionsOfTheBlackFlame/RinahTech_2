@@ -13,19 +13,19 @@ dotenv.config();
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
 // Database environment variables
-// const dbConnection = mysql.createConnection({
-//     host: process.env.DB_HOST,
-//     user: process.env.DB_USER,
-//     password: process.env.DB_PASSWORD,
-//     database: process.env.DB_NAME,
-//     multipleStatements: true
-// })
+const dbConnection = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    multipleStatements: true
+})
 
-// // Establish connection to database
-// dbConnection.connect(error => {
-//     if (error) throw error;
-//     console.log("connected to database.");
-// });
+// Establish connection to database
+dbConnection.connect(error => {
+    if (error) throw error;
+    console.log("connected to database.");
+});
 
 
 const botState = {
@@ -178,7 +178,8 @@ sceneWebContent.enter(async (ctx) => {
         Markup.button.callback("About", "about_sect"),
         Markup.button.callback("Hero", "hero_sect"),
         Markup.button.callback("Team", "team_sect"),
-        Markup.button.callback("Service Cards", "service_sect")
+        Markup.button.callback("Service Cards", "service_sect"),
+        Markup.button.callback("Back", "back")
     ]))
 })
 
@@ -216,6 +217,7 @@ bot.action("main_menu", async (ctx) => {
 
 bot.action("announcements", async (ctx) => { ctx.scene.enter('announcements') })
 bot.action("add_media", async (ctx) => {ctx.scene.enter('add_media')});
+bot.action("web_content", async (ctx) => {ctx.scene.enter("web_content")});
 bot.launch();
 
 async function setBotState(chatId, currentNodeId) {

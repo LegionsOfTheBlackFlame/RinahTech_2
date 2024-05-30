@@ -6,8 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             throw new Error('Network response was not ok ' + reviewsFetchResponse.statusText);
         }
         let reviews = await reviewsFetchResponse.json();
-        console.log("Fetched reviews: ", reviews);
-
+       
         // Filter out reviews with no Original_text
         reviews = reviews.filter(review => review.Original_text && review.Original_text.trim().length > 0);
 
@@ -56,7 +55,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-
         const fetchedData = await fetch('/service_cards_content');
         if (!fetchedData.ok) {
             throw new Error('Network response was not ok ' + fetchedData.statusText);
@@ -74,18 +72,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             description.textContent = service.service_card_content;
         });
 
-    } catch (error) { throw error}
+    } catch (error) {
+        console.error('Error fetching service card content:', error);
+    }
 
     try {
-        const hero = document.getElementsByClassName('hero-text');
+        const hero = document.querySelector('.hero-text');
         const fetchedData = await fetch('/hero_content');
         if (!fetchedData.ok) {
             throw new Error('Network response was not ok ' + fetchedData.statusText);
         }
         let heroContent = await fetchedData.json();
+
         const heroTitle = hero.querySelector('h1');
         const heroText = hero.querySelector('p');
-        heroTitle.textContent = heroContent[0].content;
-        heroText.textContent = heroContent[1].content;
-    } catch (error) {throw error}
+
+        const titleContent = heroContent.find(item => item.content_role === 'title');
+        const textContent = heroContent.find(item => item.content_role === 'content');
+
+        if (titleContent) heroTitle.textContent = titleContent.content;
+        if (textContent) heroText.textContent = textContent.content;
+    } catch (error) {
+        console.error('Error fetching hero content:', error);
+    }
 });

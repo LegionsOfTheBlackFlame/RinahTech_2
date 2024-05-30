@@ -16,6 +16,7 @@
       <link rel="stylesheet" href="css/bootstrap.min.css">
       <!-- style css -->
       <link rel="stylesheet" href="css/style.css">
+      <link rel="stylesheet" href="css/gallery.css">
       <!-- responsive-->
       <link rel="stylesheet" href="css/responsive.css">
       <!-- awesome fontfamily -->
@@ -32,11 +33,10 @@
        <div class="header">
         <div class="header-layout">
            <div class="header-logo">
-              <img src="/images/diving-logo.png"/>
+              <img src="/images/diving-logo.png" />
            </div>
            <div class="nav-Menu">
               <ul class="menu">
-                 <li><a href="services.html">Services</a></li>
                  <li><a href="gallery.html">Gallery</a></li>
               </ul>
            </div>
@@ -44,44 +44,28 @@
        </div>
      </header>
      <!-- end header -->
-    <div class="gallery">
-        <div class="gallery-layout">
-            <div class="gallery-header">
-                <div class="gallery-title">
-                    <h2>Gallery</h2>
-                </div>
-                <div class="gallery-controls">
-                    <button id="btnFilters" class="gallery-filter">filters</button>
-                    <div id="contFilterOptions" class="hidden gallery-filter-options">
-                        <input type="radio" id="radioOptionAll" name="radioFilterOptions" value="" checked>
-                        <label for="radioOptionAll">All Media</label>
-
-                        <input type="radio" id="radioOptionImages" name="radioFilterOptions" value="image" >
-                        <label for="radioOptionImages">Images</label>
-                        
-                        <input type="radio" id="radioOptionVideos" name="radioFilterOptions" value="video">
-                        <label for="radioOptionVideos">Videos</label>
-                        
+     <div id="main">
+       
+        <div id="gallery" class="gallery">
+            <div class="gallery-layout">
+                <div class="gallery-header">
+                    <h3>Gallery</h3>
+                    <button id="btnFilters">Filters</button>
+                    <div id="contFilterOptions" class="hidden">
+                        <input type="radio" name="radioFilterOptions" value="" checked>All<br>
+                        <input type="radio" name="radioFilterOptions" value="image">Images<br>
+                        <input type="radio" name="radioFilterOptions" value="video">Videos<br>
                     </div>
                 </div>
-            </div>
-
-            <div class="gallery-container" id="gallery_container">
-                
-            </div>
-
-            <div class="page-indicators">
-                <p id="btnIndicatorPrev" class="indicator-control">prev</p>
-                <div>
-                    <input type="radio" name="indicator" value="1" checked>
-                    <input type="radio" name="indicator" value="2">
-                    <input type="radio" name="indicator" value="3">
-                </div>
-                <p id="btnIndicatorNext" class="indicator-control">next</p>
+                <div id="item-display-container" class="hidden"></div>
+                <div id="gallery_container" class="gallery-container"></div>
+                <div id="btnIndicatorPrev" class="indicator-control">&lt;</div>
+                    <div id="indicatorContainer" class="page-indicators"></div>
+                    <div id="btnIndicatorNext" class="indicator-control">&gt;</div>
             </div>
         </div>
-    
-     </div>
-     <script src="js/gallery.js"></script>
-   </body>
-</html>
+    </div>
+   
+    <script src="js/gallery.js"></script>
+    </body>
+    </html>

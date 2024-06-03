@@ -56,7 +56,22 @@ async function dbFetchGoogleReviews() {
 }
 
 export {dbFetchGoogleReviews};
+async function dbFetchAnnouncementContent() {
+    const queryString = "SELECT * FROM sl_announcement";
+    return new Promise((resolve, reject) => {
+        dbConnection.query(queryString, (error, results, fields) => {
+            if (error) {
+                console.error("error when performing query: ", error);
+                reject(error);
+            } else {
+                console.log("Fetched google reviews: ", results);
+                resolve(results);
+            }
+        })
+    })
+}
 
+export {dbFetchAnnouncementContent};
 async function dbFetchServiceCardContent() {
     const queryString = "SELECT * FROM sl_service_cards";
     return new Promise((resolve, reject) => {
@@ -90,6 +105,7 @@ async function dbFetchHeroContent() {
 }
 
 export {dbFetchHeroContent}
+
 //fetch value from specific column
 function dbFetchSingular(columnName, tableName) {
  console.log('running fetch singular');

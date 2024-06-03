@@ -6,9 +6,9 @@ export default async function fetchYouTubePlaylistItems(playlistId, apiKey, call
     let items = [];
 
     do {
-        console.log("Fetching page with token:", pageToken);
+        // console.log("Fetching page with token:", pageToken);
         const url = `${baseUrl}?key=${apiKey}&part=snippet&playlistId=${playlistId}&maxResults=10&pageToken=${pageToken}&order=date`;
-        console.log("Request URL:", url);
+        // console.log("Request URL:", url);
         try {
             const response = await axios.get(url);
 

@@ -9,7 +9,7 @@ import { google } from "googleapis";
 import {Storage} from "@google-cloud/storage";
 
 import { generateIV, encryptTokens, decryptTokens } from "./encryption.js";
-import { dbConnection, dbStoreTokens, dbFetchSingular, dbFetchGoogleReviews, dbFetchServiceCardContent, dbFetchHeroContent} from "./database.js";
+import { dbConnection, dbStoreTokens, dbFetchSingular, dbFetchGoogleReviews, dbFetchAnnouncementContent, dbFetchServiceCardContent, dbFetchHeroContent} from "./database.js";
 import fetchYouTubePlaylistItems from "./funcYoutube.js";
 // import fetchImagesFromCloudStorage from "./funcCloudStorage.js";
 import combineAndSortData from "./funcUtils.js";
@@ -166,6 +166,15 @@ app.get('/service_cards_content', async (req, res) => {
     } catch(error) {
         throw error;
     }
+});
+app.get('announcement_content', async (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    try {
+        const allcontent= await dbFetchAnnouncementContent();
+        res.json(allcontent);
+    } catch(error) {
+        throw error;
+    }
 })
 app.get('/hero_content', async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
@@ -176,6 +185,21 @@ app.get('/hero_content', async (req, res) => {
         throw error;
     }
 });
+app.get('/hero_page', async (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', 'hero.html'));
+});
+app.get('/current', async (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', 'current.html'));
+})
+app.get('/locs', async (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', 'locs.html'));
+})
+app.get('/orgs', async (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', 'orgs.html'));
+})
+app.get('/activities', async (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', 'activities.html'));
+})
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
   });

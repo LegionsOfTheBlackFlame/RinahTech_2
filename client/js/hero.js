@@ -1,25 +1,62 @@
 document.addEventListener('DOMContentLoaded', async () => {
+   
     try {
         const fetchedData = await fetch('/hero_content');
         if (!fetchedData.ok) {
             throw new Error('Network response was not ok ' + fetchedData.statusText);
         }
-        const heroContent =  await fetchedData.json();
+        const heroContent = await fetchedData.json();
         const contentContainer = document.getElementById('hero_main');
-        const heroTitle = document.createElement('h1');
+
+        // Append the title
         const title = heroContent.find(item => item.content_role === 'title');
-        heroTitle.innerHTML = title.content;
-        contentContainer.appendChild(heroTitle);
+        if (title) {
+            const heroTitle = document.createElement('h1');
+            heroTitle.innerHTML = title.content;
+            contentContainer.appendChild(heroTitle);
+        }
+
+        // Filter paragraph and media content
         const paragraphData = heroContent.filter(item => /^content_\d+$/.test(item.content_role));
+        const mediaData = heroContent.filter(item => /^media_\d+$/.test(item.content_role));
 
-        paragraphData.forEach(item => {
-            const pElement = document.createElement('p');
-            pElement.textContent = item.content;
-            pElement.id = item.content_role;  // Optionally set the ID to content_role
+        // Sort content by number
+        const sortByRoleNumber = (a, b) => {
+            const aNum = parseInt(a.content_role.match(/\d+$/)[0], 10);
+            const bNum = parseInt(b.content_role.match(/\d+$/)[0], 10);
+            return aNum - bNum;
+        };
 
-            contentContainer.appendChild(pElement);
-        });
+        paragraphData.sort(sortByRoleNumber);
+        mediaData.sort(sortByRoleNumber);
+
+        // Merge the paragraph and media data
+        const maxLength = Math.max(paragraphData.length, mediaData.length);
+        for (let i = 0; i < maxLength; i++) {
+            if (i < paragraphData.length) {
+                const pElement = document.createElement('p');
+                pElement.textContent = paragraphData[i].content;
+                pElement.id = paragraphData[i].content_role;  // Optionally set the ID to content_role
+                contentContainer.appendChild(pElement);
+            }
+            if (i < mediaData.length) {
+                const videoElement = document.createElement('video');
+                const videoSource = document.createElement('source');
+                videoSource.src = mediaData[i].content;
+                videoSource.type = "video/mp4";
+                videoElement.appendChild(videoSource);
+
+                // Set video attributes for autoplay, mute, and loop
+                videoElement.width = 700;
+                videoElement.height = 500;
+                videoElement.autoplay = true;
+                videoElement.muted = true;
+                videoElement.loop = true;
+
+                contentContainer.appendChild(videoElement);
+            }
+        }
     } catch (error) {
-        throw error;
+        console.error('Error fetching content:', error);
     }
-})
+});

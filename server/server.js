@@ -57,20 +57,20 @@ app.get('/auth', (req, res) => {
   });
 // Initial Auth process for Google APIs
 app.get('/oauth2_initial_callback', async (req, res) => {
-    console.log("running auth process...");
+    // console.log("running auth process...");
     const { code } = req.query;
     
     try {
     const { tokens } = await oauth2client.getToken(code);
     oauth2client.setCredentials(tokens);
-    console.log('tokens set: ', tokens);
+    // console.log('tokens set: ', tokens);
     res.send('success!'); 
 
     const thisIV = generateIV();
     const thisAccessToken = encryptTokens(tokens.access_token, thisIV);
-    console.log("this is the encrypted access token: ", thisAccessToken);
+    // console.log("this is the encrypted access token: ", thisAccessToken);
     const thisRefreshToken = encryptTokens(tokens.refresh_token, thisIV);
-    console.log("this is the encrypted refresh token: ", thisRefreshToken);
+    // console.log("this is the encrypted refresh token: ", thisRefreshToken);
 
     dbStoreTokens(thisAccessToken, thisRefreshToken, tokens.token_type, tokens.expiry_date, thisIV);
 }
@@ -84,15 +84,15 @@ app.get('/oauth2_initial_callback', async (req, res) => {
 app.get('/fetch_tokens_from_database', async (req, res) => {
     try {
         const encryptedAccessToken = await dbFetchSingular('tkn_access', 'sl_tokens');
-        console.log("test", encryptedAccessToken);
+        // console.log("test", encryptedAccessToken);
         const encryptedRefreshToken = await dbFetchSingular('tkn_refresh', 'sl_tokens');
         const thisIV = await dbFetchSingular('tkn_encrypted_iv', 'sl_tokens');
 
         if (encryptedAccessToken.length > 0 && encryptedRefreshToken.length > 0 && thisIV.length > 0) {
             const decryptedAccessToken = decryptTokens(encryptedAccessToken[0].tkn_access, thisIV[0].tkn_encrypted_iv);
             const decryptedRefreshToken = decryptTokens(encryptedRefreshToken[0].tkn_refresh, thisIV[0].tkn_encrypted_iv);
-            console.log("access token: ", decryptedAccessToken);
-            console.log("refresh token: ", decryptedRefreshToken);
+            // console.log("access token: ", decryptedAccessToken);
+            // console.log("refresh token: ", decryptedRefreshToken);
             oauth2client.setCredentials({
                 access_token: decryptedAccessToken,
                 refresh_token: decryptedRefreshToken
@@ -120,7 +120,7 @@ app.get('/fetch_media', async (req, res) => {
 
     const videoCallback = (partialData) => {
        
-       console.log(partialData);
+    //    console.log(partialData);
      res.write(JSON.stringify(partialData));
         
     };
@@ -200,6 +200,24 @@ app.get('/orgs', async (req, res) => {
 app.get('/activities', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'activities.html'));
 })
+app.get('team_yucel_content', async (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    try {
+        const allcontent = await dbFetchTeamYucel();
+        res.json(allcontent);
+    } catch(error) {
+        throw error;
+    }
+})
+app.get('/team_mustafa_content', async (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    try {
+        const allcontent = await dbFetchTeamMustafa();
+        res.json(allcontent);
+    } catch(error) {
+        throw error;
+    }
+})
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
   });
@@ -215,7 +233,7 @@ const storage = new Storage({
 
 async function fetchImagesFromCloudStorage(bucketName, callback) {
     try {
-        console.log("fetching images");
+        // console.log("fetching images");
         const [files] = await storage.bucket(bucketName).getFiles({ autoPaginate: false, maxResults: 5 });
         let items = [];
 

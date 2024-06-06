@@ -14,7 +14,7 @@ const dbConnection = mySql.createConnection({
 // Establish connection to database
 dbConnection.connect(error => {
     if (error) throw error;
-    console.log("connected to database.");
+    // console.log("connected to database.");
 });
 
 export {dbConnection};
@@ -31,7 +31,7 @@ function dbStoreTokens(accessToken, refreshToken, tokenType, expiresIn, encrypte
     //push values into database
     dbConnection.query(queryString, values, (error, results, fields) => {
         if (error) throw error;
-        console.log('saved token in database: ', results.insertId);
+        // console.log('saved token in database: ', results.insertId);
     })
 }
 
@@ -48,7 +48,7 @@ async function dbFetchGoogleReviews() {
                     console.error("error when performing query: ", error);
                     reject(error);
                 } else {
-                    console.log("Fetched google reviews: ", results);
+                    // console.log("Fetched google reviews: ", results);
                     resolve(results);
                 }
             })
@@ -64,7 +64,7 @@ async function dbFetchAnnouncementContent() {
                 console.error("error when performing query: ", error);
                 reject(error);
             } else {
-                console.log("Fetched google reviews: ", results);
+                // console.log("Fetched google reviews: ", results);
                 resolve(results);
             }
         })
@@ -80,7 +80,7 @@ async function dbFetchServiceCardContent() {
                 console.error("error when performing query: ", error);
                 reject(error);
             } else {
-                console.log("Fetched google reviews: ", results);
+                // console.log("Fetched google reviews: ", results);
                 resolve(results);
             }
         })
@@ -97,7 +97,7 @@ async function dbFetchHeroContent() {
                 console.error("error when performing query: ", error);
                 reject(error);
             } else {
-                console.log("Fetched google reviews: ", results);
+                // console.log("Fetched google reviews: ", results);
                 resolve(results);
             }
         })
@@ -106,11 +106,44 @@ async function dbFetchHeroContent() {
 
 export {dbFetchHeroContent}
 
+async function dbFetchTeamMustafa() {
+    const queryString = "SELECT * FROM sl_team_mustafa";
+    return new Promise((resolve, reject) => {
+        dbConnection.query(queryString, (error, results, fields) => {
+            if (error) {
+                console.error("error when performing query: ", error);
+                reject(error);
+            } else {
+                // console.log("Fetched google reviews: ", results);
+                resolve(results);
+            }
+        })
+    })
+}
+
+export {dbFetchTeamMustafa};
+
+async function dbFetchTeamYucel() {
+    const queryString = "SELECT * FROM sl_team_yucel";
+    return new Promise((resolve, reject) => {
+        dbConnection.query(queryString, (error, results, fields) => {
+            if (error) {
+                console.error("error when performing query: ", error);
+                reject(error);
+            } else {
+                // console.log("Fetched google reviews: ", results);
+                resolve(results);
+            }
+        })
+    })
+}
+
+export {dbFetchTeamYucel};
 //fetch value from specific column
 function dbFetchSingular(columnName, tableName) {
- console.log('running fetch singular');
+//  console.log('running fetch singular');
     const queryString = `SELECT ${columnName} FROM ${tableName}`;
-    console.log("the query string: ", queryString);
+    // console.log("the query string: ", queryString);
     
     return new Promise((resolve, reject) => {
         dbConnection.query(queryString, (error, results, fields) => {
@@ -118,7 +151,7 @@ function dbFetchSingular(columnName, tableName) {
                 console.error("error when performing query: ", error);
                 reject(error);
             } else {
-                console.log("singular fetch query done: ", results);
+                // console.log("singular fetch query done: ", results);
                 resolve(results);
             }
         })
@@ -126,3 +159,4 @@ function dbFetchSingular(columnName, tableName) {
 };
 
 export {dbFetchSingular};
+

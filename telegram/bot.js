@@ -26,7 +26,11 @@ dbConnection.connect(error => {
     if (error) throw error;
     console.log("connected to database.");
 });
-
+const bucketName = "sealeon"
+const storage = new Storage({
+    projectId: 'sealeon-diving',
+    keyFilename: null
+});
 
 const botState = {
     userId: 1,
@@ -138,7 +142,7 @@ console.log("add media callback triggered!");
 })
 
 sceneAddImages.on('photo', async (ctx) => {
-    console.log(ctx.message);
+    console.log(ctx.message.photo[0].file_id);
     const fileId = ctx.message.photo[0].file_id;
    
 

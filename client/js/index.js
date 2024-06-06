@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const fetchedData = await fetch('/announcement_content');
         const announcement = await fetchedData.text();
-        console.log(announcement);
+        // console.log(announcement);
        
     } catch (error) {
         throw error;

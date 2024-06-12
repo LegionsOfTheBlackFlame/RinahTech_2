@@ -120,8 +120,24 @@ async function dbFetchTeamMustafa() {
         })
     })
 }
-
 export {dbFetchTeamMustafa};
+
+async function dbFetchLocsContent() {
+    const queryString = "SELECT * FROM sl_locations";
+    return new Promise((resolve, reject) => {
+        dbConnection.query(queryString, (error, results, fields) => {
+            if (error) {
+                console.error("error when performing query: ", error);
+                reject(error);
+            } else {
+                // console.log("Fetched google reviews: ", results);
+                resolve(results);
+            }
+        })
+    })
+}
+
+export {dbFetchLocsContent};
 
 async function dbFetchTeamYucel() {
     const queryString = "SELECT * FROM sl_team_yucel";

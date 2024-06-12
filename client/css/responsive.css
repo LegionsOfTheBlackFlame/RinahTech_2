@@ -3,18 +3,9 @@
         width: 100vw;
         font-size: 13px;
     }
-    .hero, .services, .team, .contact, .testimonials {
+    .hero, .team, .contact, .testimonials {
         width: 100vw;
         padding: 3em;
-    }
-    .services-layout {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: clamp(20px, 3vw, 50px);
-        padding: 10%;
-    }
-    .service-card {
-      
-        margin-bottom: 3em;
     }
    
     .contact {
@@ -43,15 +34,11 @@
     .header-layout {
         padding: 0 1em;
     }
-    .hero, .services, .team, .contact, .testimonials {
+    .hero, .team, .contact, .testimonials {
         width: 100vw;
         padding: 3em 0;
     }
-    .services-layout {
-        grid-template-columns: 1fr;
-       
-        overflow: visible;
-    }
+   
     .team {
         height: unset;
     }

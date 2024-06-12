@@ -3,16 +3,22 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from "dotenv";
 import  express  from "express";
-import { request } from "express";
+
 
 import { google } from "googleapis";
-import {Storage} from "@google-cloud/storage";
+
 
 import { generateIV, encryptTokens, decryptTokens } from "./encryption.js";
-import { dbConnection, dbStoreTokens, dbFetchSingular, dbFetchGoogleReviews, dbFetchAnnouncementContent, dbFetchServiceCardContent, dbFetchHeroContent} from "./database.js";
+import { dbStoreTokens,
+         dbFetchSingular,
+         dbFetchGoogleReviews, 
+         dbFetchAnnouncementContent, 
+         dbFetchServiceCardContent, 
+         dbFetchHeroContent,
+         dbFetchLocsContent} from "./database.js";
 import fetchYouTubePlaylistItems from "./funcYoutube.js";
 import fetchImagesFromCloudStorage from "./funcCloudStorage.js";
-import combineAndSortData from "./funcUtils.js";
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -180,6 +186,15 @@ app.get('/hero_content', async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     try {
         const allcontent = await dbFetchHeroContent();
+        res.json(allcontent);
+    } catch(error) {
+        throw error;
+    }
+});
+app.get('/locs_content', async (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    try {
+        const allcontent = await dbFetchLocsContent();
         res.json(allcontent);
     } catch(error) {
         throw error;

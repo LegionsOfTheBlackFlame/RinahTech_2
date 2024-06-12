@@ -324,6 +324,7 @@ header {
      bottom: 1em;
      right: 1em;
      background-color: #26cc35;
+     z-index: 2;
 
 }
 
@@ -426,53 +427,49 @@ white-space: pre-wrap;
 .services {
      width: 100vw;
      background-color: #000000;
-     overflow: hidden; /* Add this line to prevent overflow */
+     overflow: hidden; 
  }
 
- .services-layout {
+.services-layout {
      width: 90%;
      display: grid;
      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
      gap: clamp(10px, 2vw, 30px);
-     justify-items: center;
+   
      padding: 5em;
      margin: auto;
-     box-sizing: border-box; /* Ensure padding is included in width calculation */
+     box-sizing: border-box;
  }
-
  .service-card {
      display: grid;
-     width: clamp(250px, 100%, 500px);
-     height: clamp(450px, 100%, 770px);
+     justify-items: stretch;
+     align-items: stretch;
      margin: 0 2em;
      background-color: #daff9e;
-     box-sizing: border-box; /* Ensure padding is included in height calculation */
+     box-sizing: border-box; 
  }
-
  .service-img {
      width: 100%;
      height: 20vh;
      background-size: cover;
      background-position: center;
 }
-
-
-
- .service-info {
+.service-info {
      display: flex;
      flex-direction: column;
+     
      padding: 1em 2em;
-     box-sizing: border-box; /* Ensure padding is included in height calculation */
+     box-sizing: border-box; 
  }
-
  .service-info > h3 {
      color: #6d5c11;
    
  }
 
  .service-info > p {
-     margin-top: 2em;
+     margin:2em 0;
      color: rgb(0, 0, 0);
+     flex-grow: 1;
  }
 
  .service-info > button {
@@ -480,7 +477,7 @@ white-space: pre-wrap;
      margin-bottom: 1em;
      background-color: #6d5c11;
      color: white;
- }
+ } 
 
 /** team **/
 
@@ -528,7 +525,7 @@ white-space: pre-wrap;
      border-radius: 0 0 50% 0;
      overflow: hidden;
      margin: auto;
-     /* outline: 2px solid orange; */
+     z-index: 1;
 }
 
 .img-frame1 {
@@ -1178,3 +1175,13 @@ ul.social_icon li a:hover {
 #reviewer-name {
      color: #000;
 } 
+
+.locs-main {
+     width: 80vw;
+     margin: 5em auto;
+}
+.locs-list-container {
+     display: grid;
+     grid-auto-flow: column;
+     grid-template-columns: 1fr 1fr 1fr;
+}

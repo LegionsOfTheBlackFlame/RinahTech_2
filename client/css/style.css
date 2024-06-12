@@ -20,7 +20,12 @@ import Fonts
 /*--------------------------------------------------------------------- 
 basic 
 ---------------------------------------------------------------------*/
-
+:root {
+     --color-dark-1: #1f1d47;
+     --color-dark-2: #6d5c11;
+     --color-light-1: #7f84c6;
+     --color-light-2: #daff9e;
+}
 body {
      margin: auto;
      color: #666666;
@@ -481,7 +486,7 @@ white-space: pre-wrap;
 
 .team {
      width: 100vw;
-     height: 90vh;
+    
      background-color: #1f1d47;
 }
 .team-layout {
@@ -537,6 +542,18 @@ white-space: pre-wrap;
   background-position-x: -3em;
   background-position-y: -2.9em;
    
+}
+
+.img-frame2 {
+     width: 217em;
+     height: 43em;
+     background-image: url(../images/yucel.png);
+     background-size: contain;
+     background-repeat: no-repeat;
+     z-index: 2;
+     position: absolute;
+     background-position-x: -3em;
+     background-position-y: -3.9em;
 }
 
 .img-background {

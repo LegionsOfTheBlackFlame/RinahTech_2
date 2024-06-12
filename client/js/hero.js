@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', async () => {
-   
     try {
         const fetchedData = await fetch('/hero_content');
         if (!fetchedData.ok) {
@@ -7,13 +6,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         const heroContent = await fetchedData.json();
         const contentContainer = document.getElementById('hero_main');
+        const titleContainer = document.getElementById('title');
 
         // Append the title
         const title = heroContent.find(item => item.content_role === 'title');
         if (title) {
             const heroTitle = document.createElement('h1');
             heroTitle.innerHTML = title.content;
-            contentContainer.appendChild(heroTitle);
+            titleContainer.appendChild(heroTitle);
         }
 
         // Filter paragraph and media content
@@ -34,26 +34,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         const maxLength = Math.max(paragraphData.length, mediaData.length);
         for (let i = 0; i < maxLength; i++) {
             if (i < paragraphData.length) {
-                const pElement = document.createElement('p');
-                pElement.textContent = paragraphData[i].content;
-                pElement.id = paragraphData[i].content_role;  // Optionally set the ID to content_role
+                const pElement = document.createElement('div');
+                pElement.classList.add('paragraph');
+                pElement.classList.add(`test_paragraph${i + 1}`);
+                pElement.innerHTML = `<p>${paragraphData[i].content}</p>`;
+                pElement.id = `test_paragraph${i + 1}`;
                 contentContainer.appendChild(pElement);
             }
             if (i < mediaData.length) {
+                const mediaElement = document.createElement('div');
+                mediaElement.classList.add('image');
+                mediaElement.classList.add(`test-media${i + 1}`);
+                mediaElement.id = `test_media${i + 1}`;
+
                 const videoElement = document.createElement('video');
-                const videoSource = document.createElement('source');
-                videoSource.src = mediaData[i].content;
-                videoSource.type = "video/mp4";
-                videoElement.appendChild(videoSource);
+                videoElement.src = mediaData[i].content;
+               
 
                 // Set video attributes for autoplay, mute, and loop
-                videoElement.width = 700;
-                videoElement.height = 500;
                 videoElement.autoplay = true;
                 videoElement.muted = true;
                 videoElement.loop = true;
 
-                contentContainer.appendChild(videoElement);
+                mediaElement.appendChild(videoElement);
+                contentContainer.appendChild(mediaElement);
             }
         }
     } catch (error) {

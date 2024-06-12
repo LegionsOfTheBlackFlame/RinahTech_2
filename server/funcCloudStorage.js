@@ -1,7 +1,20 @@
 import { Storage } from "@google-cloud/storage";
-const storage = new Storage();
+import { GoogleAuth } from "google-auth-library";
+const keyPath = './Google-ServiceAccountAuth.json';
+
+async function googleAuth() {
+    const auth = new GoogleAuth({
+        keyFile: keyPath,
+        scopes: 'https://www.googleapis.com/auth/cloud-platform'
+    });
+
+    const client = await auth.getClient();
+    return new Storage({ auth: client });
+}
+
 
 async function fetchImagesFromCloudStorage(bucketName, callback) {
+    const storage = await googleAuth()
     try {
         console.log("fetching images");
         const [files] = await storage.bucket(bucketName).getFiles({ autoPaginate: false, maxResults: 5 });
@@ -49,3 +62,8 @@ async function fetchImagesFromCloudStorage(bucketName, callback) {
 
 
 export default fetchImagesFromCloudStorage;
+
+async function cloudAuth() {
+    const client = new googleAuth();
+    
+}

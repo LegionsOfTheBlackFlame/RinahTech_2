@@ -4,20 +4,28 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Database environment variables
-const dbConnection = mySql.createConnection({
+const dbPool = mySql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME
-})
+}).promise();
 
 // Establish connection to database
-dbConnection.connect(error => {
-    if (error) throw error;
-    // console.log("connected to database.");
-});
+async function dbPoolQuery( queryString, values, callback) {
+    const connection = await dbPool.getConnection();
+    return connection.query(queryString, values)
+    .then(([rows, fields]) => {
+        return callback(null, rows, fields);
+    }).catch((error) => {
+        return callback(error, null, null);
+    }).then((r) => {
+        connection.release();
+        return r;
+    })
+}
 
-export {dbConnection};
+export {dbPoolQuery};
 
 //store OAuth2' access and refresh tokens
 function dbStoreTokens(accessToken, refreshToken, tokenType, expiresIn, encryptedIV) {
@@ -29,7 +37,7 @@ function dbStoreTokens(accessToken, refreshToken, tokenType, expiresIn, encrypte
     const values = [accessToken, refreshToken, tokenType, expiresIn, expiryDate, encryptedIV];
 
     //push values into database
-    dbConnection.query(queryString, values, (error, results, fields) => {
+    dbPoolQuery(queryString, values, (error, results, fields) => {
         if (error) throw error;
         // console.log('saved token in database: ', results.insertId);
     })
@@ -43,7 +51,7 @@ async function dbFetchGoogleReviews() {
         const queryString = `SELECT Id, Score, User_name, User_image_url, Original_text, Published_at_datetime, Pictures FROM sl_google_reviews`;
         
         return new Promise((resolve, reject) => {
-            dbConnection.query(queryString, (error, results, fields) => {
+            dbPoolQuery(queryString, null, (error, results, fields) => {
                 if (error) {
                     console.error("error when performing query: ", error);
                     reject(error);
@@ -59,7 +67,7 @@ export {dbFetchGoogleReviews};
 async function dbFetchAnnouncementContent() {
     const queryString = "SELECT * FROM sl_announcement";
     return new Promise((resolve, reject) => {
-        dbConnection.query(queryString, (error, results, fields) => {
+        dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {
                 console.error("error when performing query: ", error);
                 reject(error);
@@ -75,7 +83,7 @@ export {dbFetchAnnouncementContent};
 async function dbFetchServiceCardContent() {
     const queryString = "SELECT * FROM sl_service_cards";
     return new Promise((resolve, reject) => {
-        dbConnection.query(queryString, (error, results, fields) => {
+        dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {
                 console.error("error when performing query: ", error);
                 reject(error);
@@ -92,7 +100,7 @@ export {dbFetchServiceCardContent};
 async function dbFetchHeroContent() {
     const queryString = "SELECT * FROM sl_hero";
     return new Promise((resolve, reject) => {
-        dbConnection.query(queryString, (error, results, fields) => {
+        dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {
                 console.error("error when performing query: ", error);
                 reject(error);
@@ -109,7 +117,7 @@ export {dbFetchHeroContent}
 async function dbFetchTeamMustafa() {
     const queryString = "SELECT * FROM sl_team_mustafa";
     return new Promise((resolve, reject) => {
-        dbConnection.query(queryString, (error, results, fields) => {
+        dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {
                 console.error("error when performing query: ", error);
                 reject(error);
@@ -125,7 +133,7 @@ export {dbFetchTeamMustafa};
 async function dbFetchLocsContent() {
     const queryString = "SELECT * FROM sl_locations";
     return new Promise((resolve, reject) => {
-        dbConnection.query(queryString, (error, results, fields) => {
+        dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {
                 console.error("error when performing query: ", error);
                 reject(error);
@@ -141,7 +149,7 @@ export {dbFetchLocsContent};
 async function dbFetchOrgsContent() {
     const queryString = "SELECT * FROM sl_organizations_content";
     return new Promise((resolve, reject) => {
-        dbConnection.query(queryString, (error, results, fields) => {
+        dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {
                 console.error("error when performing query: ", error);
                 reject(error);
@@ -157,7 +165,7 @@ export {dbFetchOrgsContent};
 async function dbFetchActivitiesContent() {
     const queryString = "SELECT * FROM sl_activities_content";
     return new Promise((resolve, reject) => {
-        dbConnection.query(queryString, (error, results, fields) => {
+        dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {
                 console.error("error when performing query: ", error);
                 reject(error);
@@ -169,10 +177,26 @@ async function dbFetchActivitiesContent() {
     })
 }
 export {dbFetchActivitiesContent}
+
+async function dbFetchAboutContent() {
+const queryString = "SELECT * FROM sl_about";
+return new Promise((resolve, reject) => {
+    dbPoolQuery(queryString, null, (error, results, fields) => {
+        if (error) {
+            console.error("error performing query: ", error)
+            reject(error);
+        } else {
+            resolve(results);
+        }
+    })
+})
+}
+
+export {dbFetchAboutContent}
 async function dbFetchTeamYucel() {
     const queryString = "SELECT * FROM sl_team_yucel";
     return new Promise((resolve, reject) => {
-        dbConnection.query(queryString, (error, results, fields) => {
+        dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {
                 console.error("error when performing query: ", error);
                 reject(error);
@@ -192,7 +216,7 @@ function dbFetchSingular(columnName, tableName) {
     // console.log("the query string: ", queryString);
     
     return new Promise((resolve, reject) => {
-        dbConnection.query(queryString, (error, results, fields) => {
+        dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {
                 console.error("error when performing query: ", error);
                 reject(error);

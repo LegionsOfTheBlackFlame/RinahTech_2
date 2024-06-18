@@ -16,7 +16,8 @@ import { dbStoreTokens,
          dbFetchServiceCardContent, 
          dbFetchHeroContent,
          dbFetchLocsContent,
-        dbFetchOrgsContent} from "./database.js";
+        dbFetchOrgsContent,
+    dbFetchAboutContent} from "./database.js";
 import fetchYouTubePlaylistItems from "./funcYoutube.js";
 import fetchImagesFromCloudStorage from "./funcCloudStorage.js";
 

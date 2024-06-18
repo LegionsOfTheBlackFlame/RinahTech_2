@@ -1,8 +1,7 @@
 async function decodeChunks(chunk) {
     const decoder = new TextDecoder('utf-8');
     const decoded = decoder.decode(chunk);
-    const thisArray = JSON.parse(decoded);
-    return thisArray;
+    return decoded.split('\n').filter(Boolean).map(JSON.parse); // Split by newline, filter out empty strings, and parse each chunk
 }
 
 async function sortAndCombine(main, part, callback) {
@@ -38,16 +37,23 @@ function renderItems(items, StateVariables) {
 
     items.forEach((item, index) => {
         const div = document.createElement('div');
-        const img = document.createElement('img');
+        const img = new Image();
 
         div.className = item.item_type + "ItemContainer";
         img.src = item.image_source;
+       
         img.dataset.index = index;
         div.appendChild(img);
         elements.gallery.appendChild(div);
 
         img.addEventListener('click', () => {
             displayClickedItem(item, index, StateVariables);
+        });
+        img.addEventListener("load", (e) => {
+            if (e.target.height === 0) return;
+            else if (e.target.height <= 360) {div.classList.add('small')}
+            else if (360 < e.target.height <=1000) {div.classList.add('medium')}
+            else {div.classList.add('large')}
         });
     });
 }
@@ -56,7 +62,6 @@ function displayClickedItem(item, index, StateVariables) {
     const elements = StateVariables;
     elements.state.SelectedItemIndex = index;
     elements.itemDisplayContainer.innerHTML = `
-       
         <div class="display">
             ${item.item_type === 'video' ? 
                 `<iframe src="https://www.youtube.com/embed/${item.id}" class="video-item" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` :
@@ -64,8 +69,7 @@ function displayClickedItem(item, index, StateVariables) {
                 <button id="btnCloseDisplay" class="close-button">X</button>
             <button id="btnPrevItem" class="nav-button-prev">&lt;</button>
             <button id="btnNextItem" class="nav-button-next">&gt;</button>
-            </div>
-           
+        </div>
     `;
     elements.itemDisplayContainer.classList.remove('hidden');
     elements.gallery.classList.add('shrunk-gallery');
@@ -160,10 +164,21 @@ document.addEventListener('DOMContentLoaded', async function () {
     };
 
     const response = await fetch("/fetch_media");
+    const reader = response.body.getReader();
+    let partialChunk = '';
 
-    for await (const chunk of response.body) {
-        const arrayPart = await decodeChunks(chunk);
-        await sortAndCombine(StateVariables.state.Items, arrayPart, callbackSortAndCombine);
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        partialChunk += new TextDecoder('utf-8').decode(value);
+        const chunks = partialChunk.split('\n');
+        partialChunk = chunks.pop(); // Keep the last chunk as it might be incomplete
+
+        for (const chunk of chunks) {
+            const arrayPart = JSON.parse(chunk);
+            await sortAndCombine(StateVariables.state.Items, arrayPart, callbackSortAndCombine);
+        }
     }
 
     StateVariables.filterOptionsRadioGroup.forEach(radio => {

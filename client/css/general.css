@@ -1,7 +1,4 @@
-/*--------------------------------------------------------------------- 
-File Name: style.css 
----------------------------------------------------------------------*/
-
+/****GENERAL****/
 
 /*--------------------------------------------------------------------- 
 import Fonts 
@@ -15,7 +12,7 @@ import Fonts
 /*--------------------------------------------------------------------- import Files ---------------------------------------------------------------------*/
 
 @import url(font-awesome.min.css);
-@import url(owl.carousel.min.css);
+
 
 /*--------------------------------------------------------------------- 
 basic 
@@ -25,20 +22,32 @@ basic
      --color-dark-2: #6d5c11;
      --color-light-1: #7f84c6;
      --color-light-2: #daff9e;
+     --color-whatsapp: #26cc35;
+     --color-whatsappText: #0f5b34;
+     --color-darkest: #000;
+     --color-lightest: #fff;
+     --color-p-light:#fefefe;
+     --color-p-dark:#101010;
+     --color-light-2-trnsp: #daff9e50;
 }
+ * {
+     /* outline: 2px solid #ff000070; */
+ }
 body {
+     max-width: 100vw;
+     max-height: 100vh;
      margin: auto;
-     color: #666666;
      font-size: 16px;
      font-family: 'Poppins', sans-serif;
-     line-height: 1.80857;
      font-weight: normal;
-    background-color: #1f1d47;
-     /* overflow-x: hidden; */
+     color: var(--color-p-light);
+    background-color: var(--color-dark-1);
+     overflow-x: hidden;
+     
 }
 
 a {
-     color: #1f1f1f;
+     color: var(--color-dark-2);
      text-decoration: none !important;
      outline: none !important;
      -webkit-transition: all .3s ease-in-out;
@@ -55,12 +64,12 @@ h4,
 h5,
 h6 {
      letter-spacing: 0;
-     font-weight: normal;
+     
      position: relative;
      padding: 0;
      font-weight: normal;
      line-height: normal;
-     color: #ffffff;
+     color: var(--color-lightest);
      margin: 0
 }
 
@@ -96,20 +105,6 @@ h6 {
      box-sizing: border-box;
 }
 
-h1 a,
-h2 a,
-h3 a,
-h4 a,
-h5 a,
-h6 a {
-     color: #212121;
-     text-decoration: none!important;
-     opacity: 1
-}
-
-button:focus {
-     outline: none;
-}
 
 ul,
 li,
@@ -123,26 +118,9 @@ p {
      margin: 0px;
      padding: 0;
      font-weight: 400;
-     font-size: 1em;
-     line-height: 28px;
+     
 }
 
-a {
-     color: #222222;
-     text-decoration: none;
-     outline: none !important;
-}
-
-a,
-.btn {
-     text-decoration: none !important;
-     outline: none !important;
-     -webkit-transition: all .3s ease-in-out;
-     -moz-transition: all .3s ease-in-out;
-     -ms-transition: all .3s ease-in-out;
-     -o-transition: all .3s ease-in-out;
-     transition: all .3s ease-in-out;
-}
 
 img {
      max-width: 100%;
@@ -153,39 +131,6 @@ img {
      outline: 0;
 }
 
-.btn-custom {
-     margin-top: 20px;
-     background-color: transparent !important;
-     border: 2px solid #ddd;
-     padding: 12px 40px;
-     font-size: 16px;
-}
-
-.lead {
-     font-size: 18px;
-     line-height: 30px;
-     color: #767676;
-     margin: 0;
-     padding: 0;
-}
-
-.form-control:focus {
-     border-color: #ffffff !important;
-     box-shadow: 0 0 0 .2em rgba(255, 255, 255, .25);
-}
-
-.navbar-form input {
-     border: none !important;
-}
-
-.badge {
-     font-weight: 500;
-}
-
-blockquote {
-     margin: 20px 0 20px;
-     padding: 30px;
-}
 
 button {
      margin-top: auto;
@@ -205,30 +150,6 @@ button {
      }
 }
 
-.full {
-     width: 100%;
-     float: left;
-     margin: 0;
-     padding: 0;
-}
-
-.text_align_center {
-     text-align: center;
-}
-
-.text_align_left {
-     text-align: left;
-}
-
-.text_align_right {
-     text-align: right;
-}
-
-.d_flex {
-     display: flex;
-     align-items: center;
-     flex-wrap: wrap;
-}
 
 .container {
      max-width: 1170px;
@@ -280,7 +201,7 @@ header {
      grid-auto-flow: column;
      justify-content: space-between;
      margin: auto;
-     padding: 0 5em;
+     
 }
 
 .header-logo {
@@ -318,45 +239,28 @@ header {
 
 .whatsapp {
      position: fixed;
-     position: -webkit-sticky;
+    
      border-radius: 5em;
      padding: 2em;
      bottom: 1em;
-     right: 1em;
+     right: 6em;
      background-color: #26cc35;
      z-index: 2;
 
 }
+.whatsapp > * {
+     color: var(--color-whatsappText);
+     font-weight: 500;
+}
 
+.whatsapp>*:hover {
+     color: var(--color-lightest);
+    
+     cursor: pointer;
+}
 /*--------------------------------------------------------------------- 
 menu section
 ---------------------------------------------------------------------*/
-
-ul.email {
-     float: right;
-     padding-top: 1px;
-}
-
-ul.email li {
-     display: inline-block;
-     padding-right: 20px;
-}
-
-ul.email li:last-child {
-     padding-right: 0;
-}
-
-ul.email li a {
-     color: #343650;
-     font-size: 20px;
-}
-
-.openbtn {
-     cursor: pointer;
-     background-color: transparent;
-     color: white;
-     border: none;
-}
 
 
 /** banner_main **/
@@ -368,9 +272,11 @@ ul.email li a {
 }
 .hero {
      width: 100vw;
-     height: fit-content;
+     
      padding: 5em;
-     background-color: black;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
 }
 
 .hero-layout {
@@ -378,7 +284,7 @@ ul.email li a {
      grid-auto-flow: column;
      grid-template-columns: 3fr 1.5fr;
      width: 80vw;
-     height: fit-content;
+   
      justify-items: space-around;
      padding: 1em;
      gap: 1em;
@@ -388,19 +294,22 @@ ul.email li a {
 .hero-text {
      
      padding: 5%;
-     padding-right: 10em;
+     background-color: #00000050;
+     border-radius: 5em;
+   }
      /* background-color: purple; */
-}
+
 
 .hero-text>h1 {
      color: white;
+     text-align: left;
      margin: 1em 0;
      padding-right: 5em;
 }
 
 .hero-text>p {
 padding: 2em 0;
-color: #daff9e;
+color: var(--color-light-2);
 display: -webkit-box;
 -webkit-box-orient: vertical;
 -webkit-line-clamp: 5; /* Number of lines to display */
@@ -416,7 +325,7 @@ white-space: pre-wrap;
 .hero-illustration {
      width: 100%;
      height: 100%;
-     background-color: #1f1d45;
+     background-color: var(--color-dark-1);
 }
 .hero-illustration > img {
      width: 100%;
@@ -426,7 +335,7 @@ white-space: pre-wrap;
 /** Services **/
 .services {
      width: 100vw;
-     background-color: #000000;
+     background-color: var(--color-darkest);
      overflow: hidden; 
  }
 
@@ -435,7 +344,7 @@ white-space: pre-wrap;
      display: grid;
      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
      gap: clamp(10px, 2vw, 30px);
-   
+   justify-content: center;
      padding: 5em;
      margin: auto;
      box-sizing: border-box;
@@ -523,34 +432,35 @@ white-space: pre-wrap;
      width: 19em;
      height: 19em;
      border-radius: 0 0 50% 0;
-     overflow: hidden;
+     overflow: clip;
      margin: auto;
      z-index: 1;
 }
 
 .img-frame1 {
-     width: 37em;
-  height: 23em;
-  background-image: url(../images/mustafa.png);
-  background-size: contain;
-  background-repeat: no-repeat;
-  z-index: 2;
-  position: absolute;
-  background-position-x: -3em;
-  background-position-y: -2.9em;
+     width: 19em;
+     height: 22em;
+     background-image: url(../images/mustafa.png);
+     background-size: contain;
+     background-repeat: no-repeat;
+     z-index: 2;
+     position: absolute;
+     overflow: hidden;
+     background-position-x: 1em;
+     background-position-y: 0.1em;
    
 }
 
 .img-frame2 {
-     width: 217em;
-     height: 43em;
+     width: 22em;
+     height: 22em;
      background-image: url(../images/yucel.png);
      background-size: contain;
      background-repeat: no-repeat;
      z-index: 2;
      position: absolute;
-     background-position-x: -3em;
-     background-position-y: -3.9em;
+     background-position-x: -1em;
+     background-position-y: -0.9em;
 }
 
 .img-background {
@@ -685,6 +595,63 @@ white-space: pre-wrap;
      border-radius: 3em;
      background-color: white;
 }
+#reviews-container {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+ }
+ 
+ #profiles-container {
+     display: flex;
+     gap: 10px;
+     overflow: hidden;
+     width: fit-content;
+ }
+ 
+ .profile {
+     border-radius: 50%;
+     width: 50px;
+     height: 50px;
+     transition: transform 0.5s ease;
+ }
+ 
+ .active {
+     transform: scale(1.2);
+ }
+ 
+ #active-review {
+     margin-top: 20px;
+     text-align: center;
+     max-width: 600px;
+ }
+ 
+ #rating-stars {
+    
+     margin-top: auto;
+ }
+ .stars-container {
+     width: fit-content;
+     height: fit-content;
+ }
+ 
+ .star {
+     font-size: 24px;
+     color: gold;
+ }
+ 
+ #review-text {
+     aspect-ratio: 1;
+     display: -webkit-box;
+     -webkit-box-orient: vertical;
+     -webkit-line-clamp: 3; /* Number of lines to display */
+     overflow: hidden;
+     color: var(--color-p-dark);
+     text-overflow: ellipsis;
+     white-space: pre-wrap; /* Allows the text to wrap onto new lines */
+ }
+#reviewer-name {
+     color: #000;
+} 
 
 .skeleton-text-ph {
      height: 1em;
@@ -1119,69 +1086,11 @@ ul.social_icon li a:hover {
      opacity: 1;
 }
 
-
+.orgs-main {
+     width: 80vw;
+     margin: auto;
+}
 /** end contact section **/
 
 
 
-/* styles.css */
-#reviews-container {
-     display: flex;
-     flex-direction: column;
-     align-items: center;
- }
- 
- #profiles-container {
-     display: flex;
-     gap: 10px;
-     overflow: hidden;
-     width: fit-content;
- }
- 
- .profile {
-     border-radius: 50%;
-     width: 50px;
-     height: 50px;
-     transition: transform 0.5s ease;
- }
- 
- .active {
-     transform: scale(1.2);
- }
- 
- #active-review {
-     margin-top: 20px;
-     text-align: center;
-     max-width: 600px;
- }
- 
- #rating-stars {
-     margin-top: auto;
- }
- 
- .star {
-     font-size: 24px;
-     color: gold;
- }
- 
- #review-text {
-     display: -webkit-box;
-     -webkit-box-orient: vertical;
-     -webkit-line-clamp: 3; /* Number of lines to display */
-     overflow: hidden;
-     text-overflow: ellipsis;
-     white-space: pre-wrap; /* Allows the text to wrap onto new lines */
- }
-#reviewer-name {
-     color: #000;
-} 
-
-.locs-main {
-     width: 80vw;
-     margin: 5em auto;
-}
-.locs-list-container {
-     display: grid;
-     grid-auto-flow: column;
-     grid-template-columns: 1fr 1fr 1fr;
-}

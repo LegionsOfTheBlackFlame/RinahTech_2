@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         throw error;
     }
     try {
-        await fetch('/fetch_tokens_from_database');
+        
         const reviewsFetchResponse = await fetch('/google_reviews');
         if (!reviewsFetchResponse.ok) {
             throw new Error('Network response was not ok ' + reviewsFetchResponse.statusText);
@@ -39,13 +39,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                     img.classList.add('active');
                     reviewText.textContent = review.Original_text;
                     reviewerName.textContent = review.User_name;
+                    const starsContainer = document.createElement('div');
+                    starsContainer.classList = "stars-contianer";
+
                     // Render rating stars
                     for (let j = 0; j < 5; j++) {
                         const star = document.createElement('span');
                         star.classList.add('star');
                         star.textContent = j < review.Score ? '★' : '☆';
-                        ratingStars.appendChild(star);
+                        starsContainer.appendChild(star);
                     }
+                    ratingStars.appendChild(starsContainer);
                 }
                 profilesContainer.appendChild(img);
             }
@@ -102,12 +106,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const heroTitle = hero.querySelector('h1');
         const heroText = hero.querySelector('p');
+        const heroBackGround = document.getElementById('hero');
 
         const titleContent = heroContent.find(item => item.content_role === 'title');
         const textContent = heroContent.find(item => item.content_role === 'content_1');
+        const heroImageContent = heroContent.find(item => item.content_role === 'img_1');
 
         if (titleContent) heroTitle.textContent = titleContent.content;
         if (textContent) heroText.textContent = textContent.content;
+        console.log(heroImageContent.content);
+        if (heroImageContent) heroBackGround.style.backgroundImage = `url(${heroImageContent.content})`;
+        
     } catch (error) {
         console.error('Error fetching hero content:', error);
     }
@@ -115,4 +124,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById("hero_btn").addEventListener("click", function() {
         window.location.href = "/hero_page";
     });
+
+    try {
+        const response = await fetch('/about_content');
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        let aboutContent = await response.json();
+        let containerElement = document.getElementById('about_sect');
+        let titleContent = aboutContent.filter(item => item.field === "title");
+        const aboutHeaderElement = document.createElement('h3');
+        aboutHeaderElement.innerHTML = titleContent.content;
+        containerElement.appendChild(aboutHeaderElement);
+
+    } catch (error) { throw error}
 });

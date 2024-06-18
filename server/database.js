@@ -138,7 +138,37 @@ async function dbFetchLocsContent() {
 }
 
 export {dbFetchLocsContent};
+async function dbFetchOrgsContent() {
+    const queryString = "SELECT * FROM sl_organizations_content";
+    return new Promise((resolve, reject) => {
+        dbConnection.query(queryString, (error, results, fields) => {
+            if (error) {
+                console.error("error when performing query: ", error);
+                reject(error);
+            } else {
+                // console.log("Fetched google reviews: ", results);
+                resolve(results);
+            }
+        })
+    })
+}
 
+export {dbFetchOrgsContent};
+async function dbFetchActivitiesContent() {
+    const queryString = "SELECT * FROM sl_activities_content";
+    return new Promise((resolve, reject) => {
+        dbConnection.query(queryString, (error, results, fields) => {
+            if (error) {
+                console.error("error when performing query: ", error);
+                reject(error);
+            } else {
+                // console.log("Fetched google reviews: ", results);
+                resolve(results);
+            }
+        })
+    })
+}
+export {dbFetchActivitiesContent}
 async function dbFetchTeamYucel() {
     const queryString = "SELECT * FROM sl_team_yucel";
     return new Promise((resolve, reject) => {

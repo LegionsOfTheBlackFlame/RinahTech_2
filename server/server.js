@@ -15,7 +15,8 @@ import { dbStoreTokens,
          dbFetchAnnouncementContent, 
          dbFetchServiceCardContent, 
          dbFetchHeroContent,
-         dbFetchLocsContent} from "./database.js";
+         dbFetchLocsContent,
+        dbFetchOrgsContent} from "./database.js";
 import fetchYouTubePlaylistItems from "./funcYoutube.js";
 import fetchImagesFromCloudStorage from "./funcCloudStorage.js";
 
@@ -127,14 +128,14 @@ app.get('/fetch_media', async (req, res) => {
     const videoCallback = (partialData) => {
        
     //    console.log(partialData);
-     res.write(JSON.stringify(partialData));
+     res.write(JSON.stringify(partialData + '\n'));
         
     };
 
     const imageCallback = (partialData) => {
        
         
-    res.write(JSON.stringify(partialData));
+    res.write(JSON.stringify(partialData + '\n'));
        
     };
 
@@ -181,6 +182,15 @@ app.get('announcement_content', async (req, res) => {
     } catch(error) {
         throw error;
     }
+});
+app.get('/about_content', async (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    try {
+        const allcontent= await dbFetchAboutContent();
+        res.json(allcontent);
+    } catch(error) {
+        throw error;
+    }
 })
 app.get('/hero_content', async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
@@ -200,6 +210,15 @@ app.get('/locs_content', async (req, res) => {
         throw error;
     }
 });
+app.get('/orgs_content', async (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    try {
+        const allcontent = await dbFetchOrgsContent();
+        res.json(allcontent);
+    } catch(error) {
+        throw error;
+    }
+})
 app.get('/hero_page', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'hero.html'));
 });

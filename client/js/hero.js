@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Append the title
         const title = heroContent.find(item => item.content_role === 'title');
         if (title) {
-            const heroTitle = document.createElement('h1');
+            const heroTitle = document.createElement('h3');
             heroTitle.innerHTML = title.content;
             titleContainer.appendChild(heroTitle);
         }

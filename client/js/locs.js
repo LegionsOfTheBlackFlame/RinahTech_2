@@ -18,7 +18,9 @@ function renderDivingPoints(data) {
 
    
     data.forEach(point => {
+        console.log("iterating over data...")
         const { loc_region, loc_name } = point;
+        
         if (!regions[loc_region]) {
             regions[loc_region] = [];
         }
@@ -29,7 +31,7 @@ function renderDivingPoints(data) {
     for (const [region, names] of Object.entries(regions)) {
         const regionHeader = document.createElement('h2');
         const regionContainer = document.createElement('div');
-        regionContainer.classList = "region-container";
+        regionContainer.classList = `region-container-${region}`;
         regionHeader.textContent = region;
         regionContainer.appendChild(regionHeader);
         container.appendChild(regionContainer);

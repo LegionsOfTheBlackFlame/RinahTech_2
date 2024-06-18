@@ -7,8 +7,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from "fs";
 import { JSDOM } from "jsdom";
+import { GoogleAuth } from "google-auth-library";
+
 
 dotenv.config();
+const keyPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
@@ -26,12 +29,17 @@ dbConnection.connect(error => {
     if (error) throw error;
     console.log("connected to database.");
 });
-const bucketName = "sealeon"
-const storage = new Storage({
-    projectId: 'sealeon-diving',
-    keyFilename: null
-});
+async function googleAuth() {
+    const auth = new GoogleAuth({
+        keyFile: keyPath,
+        scopes: 'https://www.googleapis.com/auth/cloud-platform'
+    });
 
+    const client = await auth.getClient();
+    return new Storage({ auth: client });
+}
+
+const storage = await googleAuth();
 const botState = {
     userId: 1,
     currentNode: "main_menu",
@@ -127,38 +135,45 @@ sceneAddMedia.enter(async (ctx) => {
         Markup.button.callback("Back", "back"),
         Markup.button.callback("Images", "images"),
         Markup.button.callback("Videos", "videos")
-    ]))
-})
+    ]));
+});
 sceneAddMedia.action("images", (ctx) => { ctx.scene.enter("add_images") });
 sceneAddMedia.action("videos", (ctx) => { ctx.scene.enter("add_videos") });
 
 const sceneAddImages = new Scenes.BaseScene("add_images");
 sceneAddImages.enter(async (ctx) => {
-console.log("add media callback triggered!");
+    console.log("add media callback triggered!");
     ctx.reply("Send me the images you'd like to upload...", Markup.inlineKeyboard([
         Markup.button.callback("Cancel", "cancel"),
         Markup.button.callback("Done!", "done")
-    ]))
-})
+    ]));
+});
 
 sceneAddImages.on('photo', async (ctx) => {
     console.log(ctx.message.photo[0].file_id);
     const fileId = ctx.message.photo[0].file_id;
-   
 
     const file = await ctx.telegram.getFile(fileId);
     if (!file.file_path) {
         throw new Error('File path is undefined.');
     }
     const fileUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${file.file_path}`;
+    console.log(fileUrl);
 
     const response = await axios({
         url: fileUrl,
         method: 'GET',
         responseType: 'stream'
     });
+    console.log('response:', response);
 
-    const writeStream = storage.bucket(bucketName).file(fileId).createWriteStream();
+    const bucketName = "sealeon";
+    const filePath = file.file_path;
+    const fileExtension = filePath.substring(filePath.lastIndexOf('.'));
+    const destinationFileName = `${fileId}${fileExtension}`;
+    const writeStream = storage.bucket(bucketName).file(destinationFileName).createWriteStream({
+        contentType: response.headers['content-type']
+    });
 
     response.data.pipe(writeStream)
     .on('error', (err) => {
@@ -166,11 +181,10 @@ sceneAddImages.on('photo', async (ctx) => {
         ctx.reply('Failed to upload file.');
     })
     .on('finish', () => {
-        console.log(`File uploaded to ${bucketName}/${fileName}`);
+        console.log(`File uploaded to ${bucketName}/${destinationFileName}`);
         ctx.reply('File successfully uploaded.');
     });
 });
-
 
 const sceneAddVideos = new Scenes.BaseScene("add_videos");
 

@@ -163,7 +163,7 @@ async function dbFetchOrgsContent() {
 
 export {dbFetchOrgsContent};
 async function dbFetchActivitiesContent() {
-    const queryString = "SELECT * FROM sl_activities_content";
+    const queryString = "SELECT * FROM sl_activities";
     return new Promise((resolve, reject) => {
         dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {

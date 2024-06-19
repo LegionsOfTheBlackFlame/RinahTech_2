@@ -16,8 +16,9 @@ import { dbStoreTokens,
          dbFetchServiceCardContent, 
          dbFetchHeroContent,
          dbFetchLocsContent,
-        dbFetchOrgsContent,
-    dbFetchAboutContent} from "./database.js";
+         dbFetchOrgsContent,
+         dbFetchAboutContent,
+         dbFetchActivitiesContent} from "./database.js";
 import fetchYouTubePlaylistItems from "./funcYoutube.js";
 import fetchImagesFromCloudStorage from "./funcCloudStorage.js";
 
@@ -219,7 +220,16 @@ app.get('/orgs_content', async (req, res) => {
     } catch(error) {
         throw error;
     }
-})
+});
+app.get('/activities_content',async (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    try {
+        const allcontent = await dbFetchActivitiesContent();
+        res.json(allcontent);
+    } catch(error) {
+        throw error;
+    }
+});
 app.get('/hero_page', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'hero.html'));
 });

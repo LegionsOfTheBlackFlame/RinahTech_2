@@ -19,7 +19,8 @@ basic
 ---------------------------------------------------------------------*/
 :root {
      --color-dark-1: #1f1d47;
-     --color-dark-2: #6d5c11;
+     /* --color-dark-2: #6d5c11; */
+     --color-dark-2: #aa9021;
      --color-light-1: #7f84c6;
      --color-light-2: #daff9e;
      --color-whatsapp: #26cc35;
@@ -280,9 +281,7 @@ menu section
 }
 
 .hero-layout {
-     display: grid;
-     grid-auto-flow: column;
-     grid-template-columns: 3fr 1.5fr;
+    
      width: 80vw;
    
      justify-items: space-around;
@@ -301,7 +300,8 @@ menu section
 
 
 .hero-text>h1 {
-     color: white;
+     color:var(--color-dark-3);
+     font-weight: 700;
      text-align: left;
      margin: 1em 0;
      padding-right: 5em;
@@ -320,6 +320,8 @@ white-space: pre-wrap;
 
 .hero-btn {
      margin-top: 3em;
+     color: var(--color-lightest);
+     background-color: var(--color-dark-2);
 }
 
 .hero-illustration {
@@ -354,7 +356,7 @@ white-space: pre-wrap;
      justify-items: stretch;
      align-items: stretch;
      margin: 0 2em;
-     background-color: #daff9e;
+     background-color: var(--color-light-2);
      box-sizing: border-box; 
  }
  .service-img {
@@ -371,7 +373,8 @@ white-space: pre-wrap;
      box-sizing: border-box; 
  }
  .service-info > h3 {
-     color: #6d5c11;
+     font-weight: 500;
+     color: var(--color-dark-2);
    
  }
 
@@ -384,10 +387,58 @@ white-space: pre-wrap;
  .service-info > button {
      width: fit-content;
      margin-bottom: 1em;
-     background-color: #6d5c11;
+     background-color: var(--color-dark-2);
      color: white;
  } 
 
+ .about-sect > * {
+     box-sizing: border-box;
+ }
+ .about-sect {
+     position: relative;
+     width: 100vw;
+    margin: 0;
+     background-color: var(--color-light-2);
+ }
+
+ .about-container {
+     display: flex;
+     
+     width: 80%;
+     margin: auto;
+ }
+ .content-container {
+     padding: 2em;
+ }
+ .content-container>h3 {
+     padding-top: 3em;
+     color: var(--color-dark-2);
+ }
+ .content-container > p {
+     color: #1f1d47;
+     padding: 1em;
+ }
+ .content-container {
+     width: 50%;
+     display: block;
+ }
+ .about-container p:nth-child(1), .about-container p:nth-child(2), .about-container p:nth-child(3)  {
+     display: block;
+ }
+ .about-container p:nth-child(1) {
+     padding-top: 2em !important;
+ }
+ .about-container p:last-child {
+     padding-bottom: 2em;
+ }
+ .image-container {
+     width: 50%;
+ }
+ .about-image {
+     display: block;
+     
+     height: 100%;
+ }
 /** team **/
 
 .team {
@@ -1092,5 +1143,8 @@ ul.social_icon li a:hover {
 }
 /** end contact section **/
 
-
+.activity-main {
+     width: 80vw;
+     margin: 2em auto;
+}
 

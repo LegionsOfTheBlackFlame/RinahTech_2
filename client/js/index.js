@@ -131,11 +131,34 @@ document.addEventListener('DOMContentLoaded', async () => {
             throw new Error('Network response was not ok ' + response.statusText);
         }
         let aboutContent = await response.json();
-        let containerElement = document.getElementById('about_sect');
-        let titleContent = aboutContent.filter(item => item.field === "title");
+        let targetElement = document.getElementById('about_sect');
+        const containerElement = document.createElement('div');
+        containerElement.classList.add("about-container");
+        let titleContent = aboutContent.find(item => item.field === "title");
         const aboutHeaderElement = document.createElement('h3');
         aboutHeaderElement.innerHTML = titleContent.content;
-        containerElement.appendChild(aboutHeaderElement);
+        const contentContainer = document.createElement("div");
+        contentContainer.classList.add("content-container");
+        contentContainer.appendChild(aboutHeaderElement);
+        
+        for (let i = 0; i < 2; i++) {
+            const paragraphItem = document.createElement('p');
+            console.log(aboutContent[i]);
+           
+            paragraphItem.innerText = aboutContent[i].content;
+           contentContainer.appendChild(paragraphItem);
+           
+        }
+        containerElement.appendChild(contentContainer);
+        const imageContainer = document.createElement('div');
+        imageContainer.classList.add('image-container');
+        const imageElement = document.createElement('img');
+        imageElement.src = "https://storage.googleapis.com/sealeon/IMG_7138-cropped.JPG";
+        imageElement.classList.add("about-image");
+        imageContainer.appendChild(imageElement);
+        containerElement.appendChild(imageContainer);
+        targetElement.appendChild(containerElement);
+       
 
     } catch (error) { throw error}
 });

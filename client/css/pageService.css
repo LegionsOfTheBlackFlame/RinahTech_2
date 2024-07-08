@@ -1,0 +1,53 @@
+
+.locs-main {
+    width: 80vw;
+    margin: 5em auto;
+   
+}
+h1 {
+    font-weight: 600;
+    color: var(--color-light-1);
+    text-align: center;
+    margin: auto;
+}
+h2 {
+    color: var(--color-light-2);
+}
+p {
+    text-align: center;
+    color: var(--color-p-light);
+    margin: 1em 1em 5em 1em;
+}
+ul {
+    margin-bottom: 5em;
+}
+
+li {
+    display: block;
+    width: max-content;
+    margin-top: 0.5em;
+}
+li:nth-child(even){
+   
+    background-color: var(--color-light-2-trnsp);
+}
+.locs-list-container {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: auto;
+    grid-auto-rows: 200px;
+   margin: 1.5em;
+    gap: 1em;
+}
+
+.region-container-KAŞ {
+    grid-column: 1;
+}
+.region-container-Antalya {
+    grid-row: 1;
+    grid-column: 2;
+}
+.region-container-Kemer {
+grid-row: 2;
+grid-column: 2;
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticky Element Test</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            height: 150vh; /* Ensure the container is tall enough to enable scrolling */
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .whatsapp {
+            
+            position: fixed;
+            padding: 20px;
+            bottom: 20px; /* Stick to the bottom with a little offset */
+            right: 20px;
+            background-color: #26cc35;
+            display: block;
+            width: 100%;
+            text-align: center;
+            color: white;
+        }
+
+        .content {
+            margin-top: 40px;
+            height: 2000px; /* Adding more content to ensure scrolling */
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="whatsapp" id="whatsapp">
+            <a href="https://wa.me/90xxxxxxx672">Book on WhatsApp</a>
+        </div>
+        <div class="content">
+            <p>Scroll down to see the sticky element...</p>
+            <p>Some more content here...</p>
+        </div>
+    </div>
+</body>
+</html>

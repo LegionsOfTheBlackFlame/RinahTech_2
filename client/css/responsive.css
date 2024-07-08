@@ -1,0 +1,155 @@
+@media only screen and (max-width: 1205px) {
+    body {
+        width: 100vw;
+        font-size: 13px;
+    }
+   
+    .hero, .team, .contact, .testimonials {
+        width: 100vw;
+        padding: 3em;
+    }  
+   
+    .header-layout {
+       
+        padding: 0 3em;
+    }
+   
+    .contact {
+        
+        height: clamp(fit-content, 80vh, 3000px);
+    }
+    .contact-layout {
+        grid-auto-flow: row;
+    }
+    .contact-info {
+        grid-column: 1;
+        grid-row: 3;
+    }
+    .contact-map {
+        min-height: 500px;
+        grid-column: 1;
+        grid-row: 2;
+    }
+}
+
+@media only screen and (min-width: 350px) and (max-width: 800px) {
+    body {
+        width: 100vw;
+        font-size: 11px;
+    }
+    .header {
+        max-height: 5em;
+    }
+    .header-layout {
+       
+        padding: 0 1em;
+    }
+    .header-logo {
+        width: 5em;
+        height: 5em;
+   }
+   .whatsapp {
+    position: fixed;
+   
+    border-radius: 5em;
+    padding: 1.5em;
+    bottom: 2em;
+    right: 1em;
+    background-color: var(--color-whatsapp);
+    
+    z-index: 2;
+
+}
+.hero, .team, .contact, .testimonials {
+        width: 100vw;
+        padding: 3em 0;
+    }
+   .hero-layout {
+    display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: auto;
+  grid-template-rows: auto;
+  width: 80vw;
+
+  justify-items: space-around;
+  padding: 0;
+  gap: 1em;
+  margin: auto;
+   }
+   .hero-text>h1 {
+    color: white;
+    
+    margin: 1em 0;
+    padding-right: 5em;
+}
+   .hero-text>p {
+    padding: 0;
+   }
+    .team {
+        height: unset;
+    }
+    .team-layout {
+        grid-auto-flow: row;
+    }
+    .testimonials-layout {
+        display: grid;
+        width: 90%;
+        height: 100%;
+        margin: auto;
+        /* outline: 2px solid red; */
+   }
+ 
+
+  .image-container {
+    display: none;
+}
+.content-container {
+    width: 100%;
+}
+}
+@media only screen and (max-width: 350px) {
+    body {
+        font-size: 10px;
+    }
+    p, li{
+        font-weight: 300;
+        font-size: 1em;
+    }
+    .menu > li {
+        padding: 1em;
+       
+   }
+   
+   .menu > li > a {
+        text-decoration: none;
+        font-size: 1em;
+        color: #7f84c6;
+   }
+
+   .header-layout {
+       
+    padding: 0 1em;
+}
+.hero-text {
+    border-radius: 2em;
+}
+.hero-text >p {
+   display: block;
+}
+.team {
+    height: unset;
+}
+.team-layout {
+    grid-auto-flow: row;
+}
+
+.image-container {
+    display: none;
+}
+.content-container {
+    width: 100%;
+}
+.testimonials-layout {
+    width: 90%;
+}
+}

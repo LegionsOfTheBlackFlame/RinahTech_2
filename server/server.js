@@ -18,7 +18,9 @@ import { dbStoreTokens,
          dbFetchLocsContent,
          dbFetchOrgsContent,
          dbFetchAboutContent,
-         dbFetchActivitiesContent} from "./database.js";
+         dbFetchActivitiesContent,
+        dbFetchTeamMustafa,
+    dbFetchTeamYucel} from "./database.js";
 import fetchYouTubePlaylistItems from "./funcYoutube.js";
 import fetchImagesFromCloudStorage from "./funcCloudStorage.js";
 
@@ -120,30 +122,34 @@ app.get('/fetch_tokens_from_database', async (req, res) => {
 // Fetches images from cloud storage and videos from youtube playlist
 app.get('/fetch_media', async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
-   
-    let allItems = [];
 
     const apiKey = process.env.YOUTUBE_API_KEY;
-    const playlistId = 'PLQY1ec61yEYkoR3hgYM3f1tp0TAsWTTsq';
+    const playlistId = 'PLiQBP0DEyEOuwJ2Wb4JZM_Uy3EyD-vcZa';
     const bucketName = 'sealeon';
 
+    let sentItems = new Set();
+
     const videoCallback = (partialData) => {
-       
-    //    console.log(partialData);
-     res.write(JSON.stringify(partialData + '\n'));
-        
+        partialData.forEach(item => {
+            if (!sentItems.has(item.image_source)) {
+                res.write(JSON.stringify(item) + '\n');
+                sentItems.add(item.image_source);
+            }
+        });
     };
 
     const imageCallback = (partialData) => {
-       
-        
-    res.write(JSON.stringify(partialData + '\n'));
-       
+        partialData.forEach(item => {
+            if (!sentItems.has(item.image_source)) {
+                res.write(JSON.stringify(item) + '\n');
+                sentItems.add(item.image_source);
+            }
+        });
     };
 
     const videoPromise = fetchYouTubePlaylistItems(playlistId, apiKey, videoCallback);
     const imagePromise = fetchImagesFromCloudStorage(bucketName, imageCallback);
-    
+
     try {
         await Promise.all([
             videoPromise.catch(err => console.error('Video fetch error:', err)),
@@ -168,63 +174,71 @@ app.get('/google_reviews', async (req, res) => {
 });
 
 app.get('/service_cards_content', async (req, res) => {
+    const {lang} = req.query;
     res.setHeader('Content-Type', 'application/json');
     try {
-        const allcontent= await dbFetchServiceCardContent();
+        const allcontent= await dbFetchServiceCardContent(lang);
         res.json(allcontent);
     } catch(error) {
         throw error;
     }
 });
 app.get('announcement_content', async (req, res) => {
+    const {lang} = req.query;
     res.setHeader('Content-Type', 'application/json');
     try {
-        const allcontent= await dbFetchAnnouncementContent();
+        const allcontent= await dbFetchAnnouncementContent(lang);
         res.json(allcontent);
     } catch(error) {
         throw error;
     }
 });
 app.get('/about_content', async (req, res) => {
+    const {lang} = req.query;
     res.setHeader('Content-Type', 'application/json');
     try {
-        const allcontent= await dbFetchAboutContent();
+        const allcontent= await dbFetchAboutContent(lang);
         res.json(allcontent);
     } catch(error) {
         throw error;
     }
 })
 app.get('/hero_content', async (req, res) => {
+    const {lang} = req.query;
+    console.log(lang);
     res.setHeader('Content-Type', 'application/json');
     try {
-        const allcontent = await dbFetchHeroContent();
+        const allcontent = await dbFetchHeroContent(lang);
         res.json(allcontent);
     } catch(error) {
         throw error;
     }
 });
 app.get('/locs_content', async (req, res) => {
+    const {lang} = req.query;
     res.setHeader('Content-Type', 'application/json');
     try {
-        const allcontent = await dbFetchLocsContent();
+        const allcontent = await dbFetchLocsContent(lang);
         res.json(allcontent);
     } catch(error) {
         throw error;
     }
 });
 app.get('/orgs_content', async (req, res) => {
+    const {lang} = req.query;
     res.setHeader('Content-Type', 'application/json');
     try {
-        const allcontent = await dbFetchOrgsContent();
+        const allcontent = await dbFetchOrgsContent(lang);
         res.json(allcontent);
     } catch(error) {
         throw error;
     }
 });
 app.get('/activities_content',async (req, res) => {
+    const {lang} = req.query;
     res.setHeader('Content-Type', 'application/json');
     try {
-        const allcontent = await dbFetchActivitiesContent();
+        const allcontent = await dbFetchActivitiesContent(lang);
         res.json(allcontent);
     } catch(error) {
         throw error;
@@ -232,6 +246,9 @@ app.get('/activities_content',async (req, res) => {
 });
 app.get('/hero_page', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'hero.html'));
+});
+app.get('/about_page', async (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', 'about.html'));
 });
 app.get('/current', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'current.html'));
@@ -246,23 +263,25 @@ app.get('/activities', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'activities.html'));
 })
 app.get('team_yucel_content', async (req, res) => {
+    const {lang} = req.query;
     res.setHeader('Content-Type', 'application/json');
     try {
-        const allcontent = await dbFetchTeamYucel();
+        const allcontent = await dbFetchTeamYucel(lang);
         res.json(allcontent);
     } catch(error) {
         throw error;
     }
-})
+});
 app.get('/team_mustafa_content', async (req, res) => {
+    const {lang} = req.query;
     res.setHeader('Content-Type', 'application/json');
     try {
-        const allcontent = await dbFetchTeamMustafa();
+        const allcontent = await dbFetchTeamMustafa(lang);
         res.json(allcontent);
     } catch(error) {
         throw error;
     }
-})
+});
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
   });

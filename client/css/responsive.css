@@ -93,19 +93,27 @@
     }
     .testimonials-layout {
         display: grid;
-        width: 100%;
+        width: 90%;
         height: 100%;
         margin: auto;
         /* outline: 2px solid red; */
    }
+ 
+
+  .image-container {
+    display: none;
+}
+.content-container {
+    width: 100%;
+}
 }
 @media only screen and (max-width: 350px) {
     body {
         font-size: 10px;
     }
     p, li{
-        font-weight: 100;
-        font-size: 0.5em;
+        font-weight: 300;
+        font-size: 1em;
     }
     .menu > li {
         padding: 1em;
@@ -122,7 +130,26 @@
        
     padding: 0 1em;
 }
+.hero-text {
+    border-radius: 2em;
+}
+.hero-text >p {
+   display: block;
+}
+.team {
+    height: unset;
+}
+.team-layout {
+    grid-auto-flow: row;
+}
 
-
-
+.image-container {
+    display: none;
+}
+.content-container {
+    width: 100%;
+}
+.testimonials-layout {
+    width: 90%;
+}
 }

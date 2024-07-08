@@ -14,42 +14,38 @@ async function googleAuth() {
 
 
 async function fetchImagesFromCloudStorage(bucketName, callback) {
-    const storage = await googleAuth()
+    const storage = await googleAuth();
     try {
         console.log("fetching images");
-        const [files] = await storage.bucket(bucketName).getFiles({ autoPaginate: false, maxResults: 5 });
+        const [files] = await storage.bucket(bucketName).getFiles({ autoPaginate: false, maxResults: 11 });
         let items = [];
 
         for (const file of files) {
             const metadata = await file.getMetadata();
-            items.push({
+            const item = {
                 image_source: `https://storage.googleapis.com/${bucketName}/${file.name}`,
                 date: new Date(metadata[0].timeCreated),
                 item_type: 'image'
-            });
-
-            // Send partial data to callback
-            if (callback) {
-                callback(items);
-            }
+            };
+            items.push(item);
         }
+
+        callback(items);
 
         let nextQuery = files.nextQuery;
         while (nextQuery) {
             const [nextFiles] = await storage.bucket(bucketName).getFiles(nextQuery);
+            items = [];
             for (const file of nextFiles) {
                 const metadata = await file.getMetadata();
-                items.push({
+                const item = {
                     image_source: `https://storage.googleapis.com/${bucketName}/${file.name}`,
                     date: new Date(metadata[0].timeCreated),
                     item_type: 'image'
-                });
-
-                // Send partial data to callback
-                if (callback) {
-                    callback(items);
-                }
+                };
+                items.push(item);
             }
+            callback(items);
             nextQuery = nextFiles.nextQuery;
         }
 
@@ -62,8 +58,3 @@ async function fetchImagesFromCloudStorage(bucketName, callback) {
 
 
 export default fetchImagesFromCloudStorage;
-
-async function cloudAuth() {
-    const client = new googleAuth();
-    
-}

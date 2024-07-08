@@ -35,26 +35,35 @@ function renderItems(items, StateVariables) {
     const elements = StateVariables;
     elements.gallery.innerHTML = '';
 
+    const processedItems = new Set();
+
     items.forEach((item, index) => {
-        const div = document.createElement('div');
-        const img = new Image();
+        if (!processedItems.has(item.image_source)) {
+            processedItems.add(item.image_source);
 
-        div.className = item.item_type + "ItemContainer";
-        img.src = item.image_source;
-       
-        img.dataset.index = index;
-        div.appendChild(img);
-        elements.gallery.appendChild(div);
+            const div = document.createElement('div');
+            const img = new Image();
 
-        img.addEventListener('click', () => {
-            displayClickedItem(item, index, StateVariables);
-        });
-        img.addEventListener("load", (e) => {
-            if (e.target.height === 0) return;
-            else if (e.target.height <= 360) {div.classList.add('small')}
-            else if (360 < e.target.height <=1000) {div.classList.add('medium')}
-            else {div.classList.add('large')}
-        });
+            div.className = item.item_type + "ItemContainer";
+            img.src = item.image_source;
+            img.dataset.index = index;
+            div.appendChild(img);
+            elements.gallery.appendChild(div);
+
+            img.addEventListener('click', () => {
+                displayClickedItem(item, index, StateVariables);
+            });
+            img.addEventListener("load", (e) => {
+                if (e.target.height === 0) return;
+                else if (e.target.height <= 360) {
+                    div.classList.add('small');
+                } else if (360 < e.target.height <= 1000) {
+                    div.classList.add('medium');
+                } else {
+                    div.classList.add('large');
+                }
+            });
+        }
     });
 }
 

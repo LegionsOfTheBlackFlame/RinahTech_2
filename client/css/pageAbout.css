@@ -1,0 +1,29 @@
+.about-main {
+    background-color: var(--color-light-2);
+}
+.about-container {
+  flex-direction: column;  
+}
+.parent-container {
+    display: flex;
+}
+.image-container {
+    margin: auto;
+}
+.about-image {
+    display: block;
+    height: unset;
+   
+}
+.content-container {
+    padding: 0 2em !important;
+}
+.content-container-2 {
+    width: 100%;
+    padding: 0 2em;
+    margin-bottom: 5em;
+}
+.content-container-2 > p {
+    color: #1f1d47;
+    padding: 1em;
+}

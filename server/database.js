@@ -94,11 +94,11 @@ async function dbFetchServiceCardContent() {
         })
     })
 }
-
+ 
 export {dbFetchServiceCardContent};
 
-async function dbFetchHeroContent() {
-    const queryString = "SELECT * FROM sl_hero";
+async function dbFetchHeroContent(lang) {
+    const queryString = `SELECT * FROM sl_hero WHERE lang=${lang}`;
     return new Promise((resolve, reject) => {
         dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {
@@ -114,8 +114,8 @@ async function dbFetchHeroContent() {
 
 export {dbFetchHeroContent}
 
-async function dbFetchTeamMustafa() {
-    const queryString = "SELECT * FROM sl_team_mustafa";
+async function dbFetchTeamMustafa(lang) {
+    const queryString = `SELECT * FROM sl_team_mustafa WHERE lang=${lang}`;
     return new Promise((resolve, reject) => {
         dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {
@@ -130,8 +130,8 @@ async function dbFetchTeamMustafa() {
 }
 export {dbFetchTeamMustafa};
 
-async function dbFetchLocsContent() {
-    const queryString = "SELECT * FROM sl_locations";
+async function dbFetchLocsContent(lang) {
+    const queryString = `SELECT * FROM sl_locations WHERE lang=${lang}`;
     return new Promise((resolve, reject) => {
         dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {
@@ -146,8 +146,8 @@ async function dbFetchLocsContent() {
 }
 
 export {dbFetchLocsContent};
-async function dbFetchOrgsContent() {
-    const queryString = "SELECT * FROM sl_organizations_content";
+async function dbFetchOrgsContent(lang) {
+    const queryString = `SELECT * FROM sl_organizations WHERE lang=${lang}`;
     return new Promise((resolve, reject) => {
         dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {
@@ -162,8 +162,8 @@ async function dbFetchOrgsContent() {
 }
 
 export {dbFetchOrgsContent};
-async function dbFetchActivitiesContent() {
-    const queryString = "SELECT * FROM sl_activities";
+async function dbFetchActivitiesContent(lang) {
+    const queryString = `SELECT * FROM sl_activities WHERE lang=${lang}`;
     return new Promise((resolve, reject) => {
         dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {
@@ -178,8 +178,8 @@ async function dbFetchActivitiesContent() {
 }
 export {dbFetchActivitiesContent}
 
-async function dbFetchAboutContent() {
-const queryString = "SELECT * FROM sl_about";
+async function dbFetchAboutContent(lang) {
+const queryString = `SELECT * FROM sl_about WHERE lang=${lang}`;
 return new Promise((resolve, reject) => {
     dbPoolQuery(queryString, null, (error, results, fields) => {
         if (error) {
@@ -193,8 +193,8 @@ return new Promise((resolve, reject) => {
 }
 
 export {dbFetchAboutContent}
-async function dbFetchTeamYucel() {
-    const queryString = "SELECT * FROM sl_team_yucel";
+async function dbFetchTeamYucel(lang) {
+    const queryString = `SELECT * FROM sl_team_yucel WHERE lang=${lang}`;
     return new Promise((resolve, reject) => {
         dbPoolQuery(queryString, null, (error, results, fields) => {
             if (error) {

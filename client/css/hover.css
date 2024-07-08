@@ -1,0 +1,27 @@
+.menu > li> a:hover {
+    color: white;
+    cursor: pointer;
+}
+
+.whatsapp>*:hover {
+    color: var(--color-lightest);
+   
+    cursor: pointer;
+}
+.hero-btn:hover {
+    background-color: var(--color-light-2);
+    color: var(--color-dark-2);
+}
+.service-info > button:hover {
+    background-color: var(--color-light-1);
+    color: var(--color-dark-1);
+}
+.content-container > button:hover {
+    background-color: var(--color-light-1);
+    color: var(--color-dark-1);
+}
+ul.social_icon li a:hover {
+    color: #26cc35;
+    transform: rotate(360deg);
+    transition: ease-in all 0.7s;
+}

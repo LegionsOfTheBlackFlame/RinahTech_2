@@ -1,6 +1,24 @@
+
+function setActiveLanguage(language) {
+    localStorage.setItem('preferredLanguage', Number(language));
+};
+
+
+function getActiveLanguage() {
+    return localStorage.getItem('preferredLanguage') || 1; // Default to English if not set
+};
+
 document.addEventListener('DOMContentLoaded', async () => {
+    let activeLanguage = 1;
+    try { activeLanguage =  getActiveLanguage();
+        
+        const langPicker = document.getElementById('lang_picker');
+        langPicker.addEventListener('change', (event) => {
+            setActiveLanguage(event.target.value);
+        })} catch(error) {console.error}
+   
     try {
-        const fetchedData = await fetch('/announcement_content');
+        const fetchedData = await fetch(`/announcement_content?lang=${activeLanguage}`);
         const announcement = await fetchedData.text();
         // console.log(announcement);
        
@@ -67,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        const fetchedData = await fetch('/service_cards_content');
+        const fetchedData = await fetch(`/service_cards_content?lang=${activeLanguage}`);
         if (!fetchedData.ok) {
             throw new Error('Network response was not ok ' + fetchedData.statusText);
         }
@@ -97,8 +115,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     try {
+        console.log(activeLanguage);
         const hero = document.querySelector('.hero-text');
-        const fetchedData = await fetch('/hero_content');
+        const fetchedData = await fetch(`/hero_content?lang=${activeLanguage}`);
         if (!fetchedData.ok) {
             throw new Error('Network response was not ok ' + fetchedData.statusText);
         }
@@ -126,7 +145,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     try {
-        const response = await fetch('/about_content');
+        const response = await fetch(`/about_content?lang=${activeLanguage}`);
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
@@ -149,6 +168,12 @@ document.addEventListener('DOMContentLoaded', async () => {
            contentContainer.appendChild(paragraphItem);
            
         }
+        const aboutBtn = document.createElement('button');
+        aboutBtn.innerText ="Read More...";
+        aboutBtn.addEventListener('click', function() {
+            window.location.href = "/about_page";
+        })
+        contentContainer.appendChild(aboutBtn);
         containerElement.appendChild(contentContainer);
         const imageContainer = document.createElement('div');
         imageContainer.classList.add('image-container');

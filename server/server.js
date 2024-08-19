@@ -117,8 +117,8 @@ app.get('/fetch_tokens_from_database', async (req, res) => {
         res.status(500).send("Failed to fetch tokens from database");
     }
 });
-
-// Fetches images from cloud storage and videos from youtube playlist
+// --- Fetching website's content ---
+    // Fetches images from cloud storage and videos from youtube playlist
 app.get('/fetch_media', async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
@@ -173,34 +173,38 @@ app.get('/google_reviews', async (req, res) => {
 });
 
 app.get('/about_content', async (req, res) => {
+    const {lang} = req.query;
 res.setHeader("Content_type", "application/json");
 try {
-const allContent = await dbFetchAboutContent();
+const allContent = await dbFetchAboutContent(lang);
 res.json(allContent);
 }  catch (error) { throw error}});
 
 app.get('/service_cards_content', async (req, res) => {
+    const {lang} = req.query;
     res.setHeader('Content-Type', 'application/json');
     try {
-        const allcontent= await dbFetchServiceCardContent();
+        const allcontent= await dbFetchServiceCardContent(lang);
         res.json(allcontent);
     } catch(error) {
         throw error;
     }
 });
 app.get('/announcement_content', async (req, res) => {
+    const {lang} = req.query;
     res.setHeader('Content-Type', 'application/json');
     try {
-        const allcontent= await dbFetchAnnouncementContent();
+        const allcontent= await dbFetchAnnouncementContent(lang);
         res.json(allcontent);
     } catch(error) {
         throw error;
     }
 })
 app.get('/hero_content', async (req, res) => {
+    const {lang} = req.query;
     res.setHeader('Content-Type', 'application/json');
     try {
-        const allcontent = await dbFetchHeroContent();
+        const allcontent = await dbFetchHeroContent(lang);
         res.json(allcontent);
     } catch(error) {
         throw error;
@@ -217,65 +221,71 @@ app.get('/locs_content', async (req, res) => {
     }
 });
 app.get('/orgs_content', async (req, res) => {
+    const {lang} = req.query;
     res.setHeader('Content-Type', 'application/json');
     try {
-        const allcontent = await dbFetchOrgsContent();
+        const allcontent = await dbFetchOrgsContent(lang);
         res.json(allcontent);
     } catch(error) {
         throw error;
     }
 });
 app.get('/activities_content',async (req, res) => {
+    const {lang} = req.query;
     res.setHeader('Content-Type', 'application/json');
     try {
-        const allcontent = await dbFetchActivitiesContent();
+        const allcontent = await dbFetchActivitiesContent(lang);
         res.json(allcontent);
     } catch(error) {
         throw error;
     }
 });
+app.get('/team_yucel_content', async (req, res) => {
+    const {lang} = req.query;
+    res.setHeader('Content-Type', 'application/json');
+    try {
+        const allcontent = await dbFetchTeamYucel(lang);
+        res.json(allcontent);
+    } catch(error) {
+        throw error;
+    }
+});
+app.get('/team_mustafa_content', async (req, res) => {
+    const {lang} = req.query;
+    res.setHeader('Content-Type', 'application/json');
+    try {
+        const allcontent = await dbFetchTeamMustafa(lang);
+        res.json(allcontent);
+    } catch(error) {
+        throw error;
+    }
+});
+
+// --- Serving web pages ---
 app.get('/hero_page', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'hero.html'));
 });
 app.get('/about_page', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'about.html'));
 });
-
 app.get('/current', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'current.html'));
-})
+});
 app.get('/locs', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'locs.html'));
-})
+});
 app.get('/orgs', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'orgs.html'));
-})
+});
 app.get('/activities', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'activities.html'));
 });
-app.get('/team_yucel_content', async (req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-    try {
-        const allcontent = await dbFetchTeamYucel();
-        res.json(allcontent);
-    } catch(error) {
-        throw error;
-    }
-})
-app.get('/team_mustafa_content', async (req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-    try {
-        const allcontent = await dbFetchTeamMustafa();
-        res.json(allcontent);
-    } catch(error) {
-        throw error;
-    }
-})
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
   });
 
 app.listen(PORT, ()=> {
     console.log(`server running on port ${PORT}`);
-})
+});
 

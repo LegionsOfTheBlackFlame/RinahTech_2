@@ -1,7 +1,23 @@
+async function setActiveLanguage(lang) {
+    localStorage.setItem('lang', lang);
+}
+async function getActiveLanguage() {
+    return Number(localStorage.getItem('lang')) || 0;
+}
 document.addEventListener('DOMContentLoaded', async () => {
     const targetElement = document.getElementById('about_main');
+    const languagePicker = document.getElementById('lang_picker');
+    let activeLang = await getActiveLanguage();
+    languagePicker.value = activeLang;
+    languagePicker.addEventListener('change', async (event) => {
+        const langValue = event.target.value;
+        await setActiveLanguage(langValue);
+        activeLang = await getActiveLanguage();
+        location.reload();
+        console.log("language changed ", activeLang);
+    });
     try {
-        const fetchResponse = await fetch('/about_content');
+        const fetchResponse = await fetch(`/about_content?lang=${activeLang}`);
         if (!fetchResponse.ok) {
             throw new Error('Network response was not ok ' + fetchResponse.statusText);
         }

@@ -1,8 +1,24 @@
+async function setActiveLanguage(lang) {
+    localStorage.setItem('lang', lang);
+}
+async function getActiveLanguage() {
+    return Number(localStorage.getItem('lang')) || 0;
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     const mainContainer = document.getElementById("orgs_main");
-
+    const languagePicker = document.getElementById('lang_picker');
+    let activeLang = await getActiveLanguage();
+    languagePicker.value = activeLang;
+    languagePicker.addEventListener('change', async (event) => {
+        const langValue = event.target.value;
+        await setActiveLanguage(langValue);
+        activeLang = await getActiveLanguage();
+        location.reload();
+        console.log("language changed ", activeLang);
+    });
     try {
-        const response = await fetch("/orgs_content");
+        const response = await fetch(`/orgs_content?lang=${activeLang}`);
         const data = await response.json();
         const orgs = {};
 

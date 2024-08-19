@@ -2,6 +2,7 @@ import { Markup, Telegraf, session, Scenes, Context } from "telegraf";
 import axios from "axios";
 import mysql from "mysql2";
 import { Storage } from "@google-cloud/storage";
+import { GoogleAuth } from "google-auth-library";
 import dotenv from "dotenv";
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -12,14 +13,14 @@ dotenv.config();
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
-// Database environment variables
+//Database environment variables
 const dbConnection = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+    host: process.env.MYSQL_DATABASE_HOST ,
+    user: process.env.MYSQL_DATABASE_USER ,
+    password: process.env.MYSQL_DATABASE_PASSWORD ,
+    database: process.env.MYSQL_DATABASE_NAME ,
     multipleStatements: true
-})
+});
 
 // Establish connection to database
 dbConnection.connect(error => {
@@ -27,13 +28,23 @@ dbConnection.connect(error => {
     console.log("connected to database.");
 });
 
+const keyPath = './Google-ServiceAccountAuth.json';
+
+async function googleAuth() {
+    const auth = new GoogleAuth({
+        keyFile: keyPath,
+        scopes: 'https://www.googleapis.com/auth/cloud-platform'
+    });
+
+    const client = await auth.getClient();
+    return new Storage({ auth: client });
+};
+const storage = await googleAuth();
 
 const botState = {
     userId: 1,
-    currentNode: "main_menu",
-    currentNodeElement: {},
-    currentNodeChildren: [],
-    currentNodeParent: {}
+   currentMenu: '',
+   menuHistory: []
 }
 
 const __filename = fileURLToPath(import.meta.url);
@@ -46,12 +57,23 @@ const document = dom.window.document;
 
 // ----ANNOUNCEMENTS----
 const sceneAnnouncement = new Scenes.BaseScene("announcements");
+
+    // --- Main Announcement Menu ---
 sceneAnnouncement.enter(async (ctx) => {
+    
     ctx.session.this = {};
+    
     const thisAnnouncement = await fetchActiveAnnouncement();
-    ctx.session.this.activeAnnouncement = thisAnnouncement[0] ? thisAnnouncement[0].announcement : "";
-    ctx.session.this.activeAnnouncementSetAt = thisAnnouncement[0] ? thisAnnouncement[0].announced_at : "";
-    ctx.reply(`Current announcement: \n ${ctx.session.this.activeAnnouncement}\n \n What would you like to do?`, Markup.inlineKeyboard([
+    
+    ctx.session.this.activeAnnouncement = thisAnnouncement[0] ?
+     thisAnnouncement[0].announcement : "";
+    ctx.session.this.activeAnnouncementSetAt = thisAnnouncement[0] ?
+     thisAnnouncement[0].announced_at : "";
+    
+     ctx.reply(`Current announcement: 
+        \n ${ctx.session.this.activeAnnouncement}\n 
+        \n What would you like to do?`,
+        Markup.inlineKeyboard([
         Markup.button.callback('Update Announcement', 'update'),
         Markup.button.callback('Remove Announcement', 'remove'),
         Markup.button.callback('View Archive', 'view_archive'),
@@ -59,18 +81,19 @@ sceneAnnouncement.enter(async (ctx) => {
     ]));
 });
 
-sceneAnnouncement.action('update', (ctx) => {
-    ctx.scene.enter('update_announcement');
-});
-
-sceneAnnouncement.action('remove', (ctx) => {
-    ctx.scene.enter('remove_announcement');
-});
 
 sceneAnnouncement.action('view_archive', (ctx) => {
     ctx.scene.enter('view_archive');
 });
+const sceneAnnouncementArchive =  new Scenes.BaseScene('view_archive');
 
+sceneAnnouncementArchive.enter((ctx) => {
+    ctx.reply('Announcement Archive is under development...');
+})
+
+    // --- Update Announcemnet Menu ---
+sceneAnnouncement.action('update', (ctx) => {
+    ctx.scene.enter('update_announcement')});
 const sceneAnnouncementUpdate = new Scenes.BaseScene('update_announcement');
 
 sceneAnnouncementUpdate.enter((ctx) => {
@@ -96,7 +119,9 @@ sceneAnnouncementUpdate.action("cancel", async (ctx) => {
     await deleteLastArchiveEntry();
     ctx.scene.enter("announcements");
 });
-
+    // --- Remove Announcement Menu ---
+sceneAnnouncement.action('remove', (ctx) => {
+    ctx.scene.enter('remove_announcement')});
 const sceneAnnouncementRemove = new Scenes.BaseScene("remove_announcement");
 sceneAnnouncementRemove.enter(async (ctx) => {
     archiveAnnouncement(ctx);
@@ -113,38 +138,45 @@ sceneAnnouncementRemove.action("confirm", async (ctx) => {
     await deleteActiveAnnouncement();
     ctx.scene.enter("announcements");
 })
+    // --- View Announcement Archive Menu ---
+    // --- Back Button ---
 
 // ----ADD--MEDIA----
 
 const sceneAddMedia = new Scenes.BaseScene("add_media");
+
+    // --- Media Main Menu
 sceneAddMedia.enter(async (ctx) => {
     console.log("add media callback triggered!");
-    ctx.reply("Which type of media are you uploading?", Markup.inlineKeyboard([
+    ctx.reply("Which type of media are you uploading?", 
+        Markup.inlineKeyboard([
         Markup.button.callback("Back", "back"),
         Markup.button.callback("Images", "images"),
         Markup.button.callback("Videos", "videos")
-    ]))
-})
-sceneAddMedia.action("images", (ctx) => { ctx.scene.enter("add_images") });
+    ]))});
+
 sceneAddMedia.action("videos", (ctx) => { ctx.scene.enter("add_videos") });
 
+    // --- Images Menu ---
+    sceneAddMedia.action("images", 
+        (ctx) => { ctx.scene.enter("add_images") });
 const sceneAddImages = new Scenes.BaseScene("add_images");
 sceneAddImages.enter(async (ctx) => {
-console.log("add media callback triggered!");
+console.log ("add media callback triggered!");
     ctx.reply("Send me the images you'd like to upload...", Markup.inlineKeyboard([
         Markup.button.callback("Cancel", "cancel"),
         Markup.button.callback("Done!", "done")
     ]))
 })
-
+const bucketName = "sealeon"
 sceneAddImages.on('photo', async (ctx) => {
-    console.log(ctx.message);
+    console.log("-recieved message", ctx.message);
     const fileId = ctx.message.photo[0].file_id;
    
 
     const file = await ctx.telegram.getFile(fileId);
     if (!file.file_path) {
-        throw new Error('File path is undefined.');
+        throw new Error('! File path is undefined. Current File: ', file);
     }
     const fileUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${file.file_path}`;
 
@@ -154,7 +186,7 @@ sceneAddImages.on('photo', async (ctx) => {
         responseType: 'stream'
     });
 
-    const writeStream = storage.bucket(bucketName).file(fileId).createWriteStream();
+    const writeStream = await storage.bucket(bucketName).file(fileId).createWriteStream();
 
     response.data.pipe(writeStream)
     .on('error', (err) => {
@@ -169,6 +201,37 @@ sceneAddImages.on('photo', async (ctx) => {
 
 
 const sceneAddVideos = new Scenes.BaseScene("add_videos");
+sceneAddVideos.enter((ctx) => {
+    ctx.reply("Video adding functionality is under development...");
+});
+
+const sceneCurrentContent = new Scenes.BaseScene("current_event_menu");
+sceneCurrentContent.enter(async (ctx) => {
+    ctx.session.this = {};
+    ctx.session.this.content = await fetchWebContent("current");
+    ctx.reply(`Your current event is: \n
+        ${ctx.session.this.content.find(item => item.field === "title").content_value} \n \n
+        (1): ${ctx.session.this.content.find(item => item.field === "paragraph 1").content_value} \n \n
+        (2): ${ctx.session.this.content.find(item => item.field === "paragraph 2").content_value} \n \n
+        (3): ${ctx.session.this.content.find(item => item.field === "paragraph 3").content_value} \n \n
+        (4): ${ctx.session.this.content.find(item => item.field === "paragraph 4").content_value}`, Markup.inlineKeyboard([
+        Markup.button.callback("Update", "current_update"),
+        Markup.button.callback("Edit", "current_edit"),
+        Markup.button.callback("Back", "back")
+    ]));
+});
+
+sceneCurrentContent.action("current_update", (ctx) => {
+    ctx.scene.enter("current_content_update");
+});
+const sceneCurrentContentUpdate = new Scenes.BaseScene("current_content_update");
+sceneCurrentContentUpdate.enter((ctx) => {
+
+    ctx.reply("You're updating your current event \n Send me the title", Markup.inlineKeyboard([
+        Markup.button.callback("Keep existing title"),
+        Markup.button.callback("Cancel", "cancel")
+    ]));
+});
 
 //----WEB-CONTENT----
 const sceneWebContent = new Scenes.BaseScene("web_content");
@@ -178,12 +241,76 @@ sceneWebContent.enter(async (ctx) => {
         Markup.button.callback("About", "about_sect"),
         Markup.button.callback("Hero", "hero_sect"),
         Markup.button.callback("Team", "team_sect"),
-        Markup.button.callback("Service Cards", "service_sect"),
-        Markup.button.callback("Back", "back")
-    ]))
-})
+        Markup.button.callback("Service Cards", "service_sect")
+    ]));
+});
 
-const myStages = new Scenes.Stage([sceneAnnouncement, sceneAnnouncementUpdate, sceneAnnouncementRemove, sceneAddMedia, sceneAddImages]);
+sceneWebContent.action('about_sect', (ctx) => {
+    ctx.scene.enter('web_about_sect');
+});
+const sceneWebAboutSect = new Scenes.BaseScene('web_about_sect');
+sceneWebAboutSect.enter( async (ctx) => {
+    ctx.session.this = {};
+    ctx.session.this.aboutContent = await fetchWebContent('about');
+    ctx.reply(`Your current about section reads: \n ${ctx.session.this.aboutContent.find(item => item.field === "title").content} 
+    \n (1): ${ctx.session.this.aboutContent.find(item => item.field === "paragraph 1").content}
+    \n (2): ${ctx.session.this.aboutContent.find(item => item.field === "paragraph 2").content}
+    \n (3): ${ctx.session.this.aboutContent.find(item => item.field === "paragraph 3").content}
+    \n (4): ${ctx.session.this.aboutContent.find(item => item.field === "paragraph 4").content}`);
+});
+
+sceneWebContent.action('hero_sect', (ctx) => {
+    ctx.scene.enter('web_hero_sect');
+});
+const sceneWebHeroSect = new Scenes.BaseScene('web_hero_sect');
+sceneWebHeroSect.enter(async (ctx) => {
+    const heroContent = await fetchWebContent('hero');
+    ctx.reply("Hero section is under development...");
+});
+
+sceneWebContent.action('team_sect', (ctx) => {
+    ctx.scene.enter('web_team_sect');
+});
+const sceneWebTeamSect = new Scenes.BaseScene('web_team_sect');
+sceneWebTeamSect.enter(async (ctx) => {
+    const mustafaTeamContent = await fetchWebContent('team_mustafa');
+    const yucelTeamContent = await fetchWebContent('team_yucel');
+    ctx.reply("Team section is under development...");
+});
+
+sceneWebContent.action('service_sect', (ctx) => {
+    ctx.scene.enter('web_service_sect');
+});
+const sceneWebServiceSect =  new Scenes.BaseScene('web_service_sect');
+sceneWebServiceSect.enter(async (ctx) => {
+    ctx.session.this.serviceCardsContent = await fetchWebContent('service_cards');
+    ctx.reply("Which card would you like to edit?", Markup.inlineKeyboard([
+        Markup.button.callback('Organisations', 'service_orgs'),
+        Markup.button.callback('Locations', 'service_locs'),
+        Markup.button.callback('Activities', 'service_acts'),
+        Markup.button.callback('Current Event', 'service_cur')
+    ]));
+});
+
+sceneWebServiceSect.action('service_orgs', (ctx) => {
+    ctx.scene.enter('service_orgs_sect');
+});
+const sceneServiceOrgSect = new Scenes.BaseScene('service_orgs_sect');
+sceneServiceOrgSect.enter((ctx) => {
+    ctx.reply('Editing organisation card content...')
+});
+
+
+
+const myStages = new Scenes.Stage([ 
+    sceneAnnouncement, 
+    sceneAnnouncementUpdate, 
+    sceneAnnouncementRemove, 
+    sceneAnnouncementArchive,
+    sceneAddMedia, 
+    sceneAddImages, 
+    sceneAddVideos,
+    sceneCurrentContent]);
 bot.use(session());
 bot.use(myStages.middleware());
 
@@ -195,8 +322,7 @@ bot.start(async (ctx) => {
         [[Markup.button.callback("Update Anoncement", botState.currentNodeChildren[0].id)],
         [Markup.button.callback("Add Media", "add_media")],
         [Markup.button.callback("Gallery", botState.currentNodeChildren[2].id)],
-        [Markup.button.callback("Edit Website's Content", botState.currentNodeChildren[3].id)],
-        [Markup.button.callback("Auth", "auth")]
+        [Markup.button.callback("Current Event", botState.currentNodeChildren[3].id)]
         ]
     ))
 });
@@ -209,15 +335,16 @@ bot.action("main_menu", async (ctx) => {
             [Markup.button.callback("Update Anoncement", botState.currentNodeChildren[0].id)],
             [Markup.button.callback("Add Media", "add_media")],
             [Markup.button.callback("Gallery", botState.currentNodeChildren[2].id)],
-            [Markup.button.callback("Edit Website's Content", botState.currentNodeChildren[3].id)]
+            [Markup.button.callback("Current Event", botState.currentNodeChildren[3].id)]
         ]
     ))
 });
+// each Scene
 
-
-bot.action("announcements", async (ctx) => { ctx.scene.enter('announcements') })
+bot.action("announcements", async (ctx) => { ctx.scene.enter('announcements') });
+bot.action("web_content", async (ctx) => { ctx.scene.enter('web_content')});
 bot.action("add_media", async (ctx) => {ctx.scene.enter('add_media')});
-bot.action("web_content", async (ctx) => {ctx.scene.enter("web_content")});
+bot.action("current_event_menu", async (ctx) => { ctx.scene.enter('current_event_menu')});
 bot.launch();
 
 async function setBotState(chatId, currentNodeId) {
@@ -296,6 +423,11 @@ async function updateActiveAnnouncement(ctx) {
         throw error;
     }
 }
+async function translateActiveAnnouncement(content) {
+
+
+    return translatedContent;
+}
 
 async function deleteLastArchiveEntry() {
     try {
@@ -330,6 +462,33 @@ async function deleteActiveAnnouncement() {
             }
         });
     });
+
+}
+
+async function fetchWebContent(section) {
+    const queryString = `select * from sl_${section} where lang=0`;
+    try {
+        return new Promise((resolve, reject) => {
+            dbConnection.query(queryString, (error, results, fields) => {
+                if (error) {
+                    console.error("Couldn't fetch web content. ", error);
+                    reject(error);
+                } else {
+                    console.log(" Fetched web content. ");
+                    resolve(results);
+                }
+            })
+        })
+    } catch (error) {
+        throw error;
+    }
+}
+
+function formatWebContent(content) {
+
+}
+
+async function updateWebContent(content, field, language) {
 
 }
 

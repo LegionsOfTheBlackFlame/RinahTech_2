@@ -18,10 +18,10 @@ dotenv.config();
 //});
 
 const dbPool = mySql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
+    host: process.env.MYSQL_DATABASE_HOST,
+    user: process.env.MYSQL_DATABASE_USER,
+    password: process.env.MYSQL_DATABASE_PASSWORD,
+    database: process.env.MYSQL_DATABASE_NAME
 }).promise();
 
 async function pooledQuery(queryString, values, callback) {
@@ -79,8 +79,8 @@ async function dbFetchGoogleReviews() {
 }
 
 export {dbFetchGoogleReviews};
-async function dbFetchAboutContent() {
-  const queryString = "SELECT * FROM sl_about";
+async function dbFetchAboutContent(lang) {
+  const queryString = `SELECT * FROM sl_about WHERE lang=${lang}`;
     return new Promise((resolve, reject) => {
       pooledQuery(queryString,null, (error, results, fields) => {
             if (error) {
@@ -94,8 +94,8 @@ async function dbFetchAboutContent() {
     })};
 export {dbFetchAboutContent};
 
-async function dbFetchAnnouncementContent() {
-    const queryString = "SELECT * FROM sl_announcement";
+async function dbFetchAnnouncementContent(lang) {
+    const queryString = `SELECT * FROM sl_announcement WHERE lang=${lang}`;
     return new Promise((resolve, reject) => {
         pooledQuery(queryString, null, (error, results, fields) => {
             if (error) {
@@ -110,8 +110,8 @@ async function dbFetchAnnouncementContent() {
 }
 
 export {dbFetchAnnouncementContent};
-async function dbFetchServiceCardContent() {
-    const queryString = "SELECT * FROM sl_service_cards";
+async function dbFetchServiceCardContent(lang) {
+    const queryString = `SELECT * FROM sl_service_cards WHERE lang=${lang}`;
     return new Promise((resolve, reject) => {
         pooledQuery(queryString, null, (error, results, fields) => {
             if (error) {
@@ -127,8 +127,8 @@ async function dbFetchServiceCardContent() {
 
 export {dbFetchServiceCardContent};
 
-async function dbFetchHeroContent() {
-    const queryString = "SELECT * FROM sl_hero_eng";
+async function dbFetchHeroContent(lang) {
+    const queryString = `SELECT * FROM sl_hero WHERE lang=${lang}`;
     return new Promise((resolve, reject) => {
         pooledQuery(queryString, null, (error, results, fields) => {
             if (error) {
@@ -161,8 +161,8 @@ async function dbFetchLocsContent() {
 
 export {dbFetchLocsContent};
 
-async function dbFetchOrgsContent() {
-    const queryString = "SELECT * FROM sl_organizations_content";
+async function dbFetchOrgsContent(lang) {
+    const queryString = `SELECT * FROM sl_organizations_content WHERE lang=${lang}`;
     return new Promise((resolve, reject) => {
         pooledQuery(queryString, null, (error, results, fields) => {
             if (error) {
@@ -177,8 +177,8 @@ async function dbFetchOrgsContent() {
 }
 
 export {dbFetchOrgsContent};
-async function dbFetchActivitiesContent() {
- const queryString = "SELECT * FROM sl_activities";
+async function dbFetchActivitiesContent(lang) {
+ const queryString = `SELECT * FROM sl_activities WHERE lang=${lang}`;
     return new Promise((resolve, reject) => {
         pooledQuery(queryString, null, (error, results, fields) => {
             if (error) {
@@ -193,8 +193,8 @@ async function dbFetchActivitiesContent() {
 }
 
 export {dbFetchActivitiesContent}
-async function dbFetchTeamMustafa() {
-    const queryString = "SELECT * FROM sl_team_mustafa";
+async function dbFetchTeamMustafa(lang) {
+    const queryString = `SELECT * FROM sl_team_mustafa WHERE lang=${lang}`;
     return new Promise((resolve, reject) => {
         pooledQuery(queryString, null, (error, results, fields) => {
             if (error) {
@@ -210,8 +210,8 @@ async function dbFetchTeamMustafa() {
 
 export {dbFetchTeamMustafa};
 
-async function dbFetchTeamYucel() {
-    const queryString = "SELECT * FROM sl_team_yucel";
+async function dbFetchTeamYucel(lang) {
+    const queryString = `SELECT * FROM sl_team_yucel WHERE lang=${lang}`;
     return new Promise((resolve, reject) => {
         pooledQuery(queryString, null, (error, results, fields) => {
             if (error) {

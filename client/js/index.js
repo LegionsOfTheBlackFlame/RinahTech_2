@@ -1,14 +1,37 @@
+async function setActiveLanguage(lang) {
+    localStorage.setItem('lang', lang);
+}
+async function getActiveLanguage() {
+    return Number(localStorage.getItem('lang')) || 0;
+}
+
+
+
 document.addEventListener('DOMContentLoaded', async () => {
+   
+   
+        const languagePicker = document.getElementById('lang_picker');
+        let activeLang = await getActiveLanguage();
+        languagePicker.value = activeLang;
+        languagePicker.addEventListener('change', async (event) => {
+            const langValue = event.target.value;
+            await setActiveLanguage(langValue);
+            activeLang = await getActiveLanguage();
+            location.reload();
+            console.log("language changed ", activeLang);
+        });
+    
+  
     try {
-        const fetchedData = await fetch('/announcement_content');
+        const fetchedData = await fetch(`/announcement_content?lang=${activeLang}`);
         const announcement = await fetchedData.text();
         // console.log(announcement);
        
     } catch (error) {
         throw error;
     }
+    
     try {
-        
         const reviewsFetchResponse = await fetch('/google_reviews');
         if (!reviewsFetchResponse.ok) {
             throw new Error('Network response was not ok ' + reviewsFetchResponse.statusText);
@@ -67,7 +90,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        const fetchedData = await fetch('/service_cards_content');
+        const fetchedData = await fetch(`/service_cards_content?lang=${activeLang}`);
         if (!fetchedData.ok) {
             throw new Error('Network response was not ok ' + fetchedData.statusText);
         }
@@ -98,7 +121,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     try {
         const hero = document.querySelector('.hero-text');
-        const fetchedData = await fetch('/hero_content');
+        const fetchedData = await fetch(`/hero_content?lang=${activeLang}`);
         if (!fetchedData.ok) {
             throw new Error('Network response was not ok ' + fetchedData.statusText);
         }
@@ -108,9 +131,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const heroText = hero.querySelector('p');
         const heroBackGround = document.getElementById('hero');
 
-        const titleContent = heroContent.find(item => item.content_role === 'title');
-        const textContent = heroContent.find(item => item.content_role === 'content_1');
-        const heroImageContent = heroContent.find(item => item.content_role === 'img_1');
+        const titleContent = heroContent.find(item => item.field === 'title');
+        const textContent = heroContent.find(item => item.field === 'content_1');
+        const heroImageContent = heroContent.find(item => item.field === 'img_1');
 
         if (titleContent) heroTitle.textContent = titleContent.content;
         if (textContent) heroText.textContent = textContent.content;
@@ -126,7 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     try {
-        const response = await fetch('/about_content');
+        const response = await fetch(`/about_content?lang=${activeLang}`);
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }

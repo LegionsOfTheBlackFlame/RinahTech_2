@@ -166,6 +166,16 @@ document.addEventListener('DOMContentLoaded', async function () {
             SelectedItemIndex: null
         }
     };
+    const languagePicker = document.getElementById('lang_picker');
+    let activeLang = await getActiveLanguage();
+    languagePicker.value = activeLang;
+    languagePicker.addEventListener('change', async (event) => {
+        const langValue = event.target.value;
+        await setActiveLanguage(langValue);
+        activeLang = await getActiveLanguage();
+        location.reload();
+        console.log("language changed ", activeLang);
+    });
 
     const callbackSortAndCombine = async (updatedMediaList) => {
         StateVariables.state.Items = [...updatedMediaList];

@@ -238,6 +238,15 @@ header {
      cursor: pointer;
 }
 
+.lang-picker {
+background-color: #00000000;
+border: 2px solid var(--color-light-1);
+border-radius: 2em;
+color: var(--color-light-1);
+padding: 0.5em 1em;
+margin: 1em ;
+}
+
 .whatsapp {
      position: fixed;
     
